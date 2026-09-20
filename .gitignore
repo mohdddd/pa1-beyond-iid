@@ -1,0 +1,21 @@
+# Datasets / storage live on Google Drive, never in git.
+# NOTE: "/data/" (root only), NOT "data/" — the latter would also ignore task1/data/ and task4/data/ code folders.
+/data/
+/_storage/
+checkpoints/
+*.pth
+*.pt
+*.ckpt
+*.npy
+*.npz
+*.tar
+*.tar.gz
+*.zip
+
+# Environments / caches
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+wandb/
+.DS_Store
