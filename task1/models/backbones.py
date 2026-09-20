@@ -64,9 +64,9 @@ def load_backbone(name: str, device="cuda") -> FrozenBackbone:
     elif name == "clip_vitb32":
         import open_clip
         from open_clip.constants import OPENAI_DATASET_MEAN, OPENAI_DATASET_STD
-        net, _, _ = open_clip.create_model_and_transforms("ViT-B-32", pretrained="openai")
+        net, _, _ = open_clip.create_model_and_transforms("ViT-B-32-quickgelu", pretrained="openai")
         bb = FrozenBackbone(name, net, OPENAI_DATASET_MEAN, OPENAI_DATASET_STD, is_clip=True,
-                            tokenizer=open_clip.get_tokenizer("ViT-B-32"))
+                            tokenizer=open_clip.get_tokenizer("ViT-B-32-quickgelu"))
     else:
         raise ValueError(name)
     return bb.to(device)
