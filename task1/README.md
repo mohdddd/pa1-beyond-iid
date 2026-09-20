@@ -18,8 +18,8 @@ task1/
     heads.py          linear heads + CLIP zero-shot classifier
   analysis/
     evaluate_bias.py  predictions, metrics, consistency, translation curve (+ shape bias later)
-    feature_similarity.py   (Part 4) cosine representation stability
-    representation.py       (Part 4) t-SNE / UMAP
+    feature_similarity.py   cosine representation stability under each intervention
+    representation.py       t-SNE / UMAP of clean vs transformed features
   scripts/run_task1.py      single entry point (stages)
   results/            machine-readable results (committed)
 ```
@@ -30,7 +30,7 @@ export PA1_STORAGE=/path/to/storage        # datasets, feature cache, checkpoint
 python -m task1.scripts.run_task1 --stage all
 ```
 Stages: `subset`, `features`, `heads`, `clean`, `color`, `patch`, `translation`, `summary`,
-`cue_generate` (then manual review in the notebook), `cue_eval`.
+`cue_generate` (then manual review in the notebook), `cue_eval`, `representation`.
 Translation image files are deleted after feature extraction (deterministic, rebuildable);
 pass `--keep-images` to keep them.
 
@@ -48,6 +48,8 @@ pass `--keep-images` to keep them.
 | `data/cue_conflict_meta.json` | content/style class of every generated conflict |
 | `data/cue_conflict_review.json` | rejection rule, rejected rows, accepted/rejected counts |
 | `../report/tables/task1_shape_bias.csv` | shape bias and coverage per model |
+| `../report/tables/task1_representation_stability.csv` | cosine stability per backbone x intervention |
+| `../report/figures/task1/task1_tsne_*.pdf` | clean vs transformed projections |
 | `../report/figures/task1/` | figures |
 
 ## External code

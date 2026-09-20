@@ -66,3 +66,12 @@ cue_conflict:
   per_group: 30               # 5 pairs x 2 directions x 30 = 300 candidates
   min_accepted: 200           # the manual requires at least 200 valid conflicts
   sheet_size: 25              # contact-sheet size for manual review
+
+# ---- Part 4: representation analysis ----
+representation:
+  method: tsne                # tsne | umap
+  perplexity: 30
+  translation_delta: 16       # cosine stability averaged over the 4 directions at this shift
+  tsne_direction: right       # single direction used in the projection plot
+  n_neighbors: 15             # UMAP only
+  min_dist: 0.1               # UMAP only

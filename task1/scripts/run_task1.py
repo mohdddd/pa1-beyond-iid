@@ -29,6 +29,8 @@ from task1.configs import (BACKBONES, CUE_ACCEPTED, CUE_CANDIDATES, HEAD_OF, MOD
                            RESULTS, cfg, color_condition, patch_condition,
                            shift_condition, split)
 from task1.data import transforms as T
+from task1.analysis.feature_similarity import stability_table
+from task1.analysis.representation import plot_all
 from task1.data import make_cue_conflicts as CC
 from task1.data.make_subset import (base_images, delete_images, images_exist, load_images,
                                     load_stl10, make_subset, save_grid, save_images)
@@ -199,7 +201,7 @@ def stage_cue_generate():
 def stage_cue_eval():
     """Build the accepted condition, extract features, report shape bias + coverage."""
     CC.build_accepted()
-    stage_features([CUE_ACCEPTED])
+    stage_features([CUE_ACCEPTED], overwrite=True)  # the accepted set can change after review
     df = evaluate_cue_conflict(DEVICE)
     df.to_csv(TABLE_DIR / "task1_shape_bias.csv", index=False)
     _print(df)
@@ -212,8 +214,18 @@ def stage_cue_eval():
     plot_cue_examples()
 
 
+def stage_representation():
+    """Cosine representation stability + t-SNE/UMAP of clean vs transformed features."""
+    c = cfg()
+    df = stability_table()
+    TABLE_DIR.mkdir(parents=True, exist_ok=True)
+    df.to_csv(TABLE_DIR / "task1_representation_stability.csv", index=False)
+    _print(df.pivot(index="intervention", columns="backbone", values="cosine_stability").reset_index())
+    plot_all(c)
+
+
 STAGES = ["subset", "features", "heads", "clean", "color", "patch", "translation", "summary",
-          "cue_generate", "cue_eval", "all"]
+          "cue_generate", "cue_eval", "representation", "all"]
 
 
 def main():
@@ -244,6 +256,8 @@ def main():
         stage_cue_generate()
     if a.stage == "cue_eval":
         stage_cue_eval()
+    if a.stage == "representation":
+        stage_representation()
 
 
 if __name__ == "__main__":
