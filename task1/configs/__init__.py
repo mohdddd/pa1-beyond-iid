@@ -39,3 +39,17 @@ def feature_dir(backbone: str) -> Path:
 
 def ckpt_dir() -> Path:
     return storage_dir("checkpoints", TASK)
+
+
+# ---- canonical condition names (Part 2) ----
+def color_condition(c: dict) -> str:
+    cc = c["color"]
+    return f"test_hue{int(cc['hue_degrees'])}" if cc["additional"] == "hue_rotation" else "test_palette"
+
+
+def patch_condition(c: dict) -> str:
+    return f"test_patch{c['patch_shuffle']['grid']}x{c['patch_shuffle']['grid']}"
+
+
+def shift_condition(delta: int, direction: str) -> str:
+    return f"test_shift{delta}_{direction}"

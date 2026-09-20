@@ -87,6 +87,12 @@ def images_exist(condition: str) -> bool:
     return image_path(condition).exists()
 
 
+def delete_images(condition: str) -> None:
+    """Remove a stored condition (used for the 12 translation conditions, which
+    are deterministic and can be rebuilt from the clean images at any time)."""
+    image_path(condition).unlink(missing_ok=True)
+
+
 def save_grid(images: torch.Tensor, name: str, nrow: int = 8) -> None:
     """Preview grid -> report/figures/task1/<name>.png (for the report/appendix)."""
     out = FIG_DIR / "task1"

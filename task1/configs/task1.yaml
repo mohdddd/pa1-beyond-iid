@@ -27,3 +27,29 @@ head:
 
 zeroshot:
   prompt: "a photo of a {}."
+
+# ---------------- Part 2: interventions ----------------
+color:
+  grayscale: bt601_luma      # Y = 0.299R + 0.587G + 0.114B, replicated to 3 channels
+  additional: hue_rotation   # design choice (alternatives: palette transfer, class-swapped stats)
+  hue_degrees: 180           # rotation of the (I,Q) chroma plane in YIQ; Y (luma) unchanged
+
+translation:
+  shifts: [8, 16, 32]        # 0 = clean
+  directions: [right, left, down, up]
+  padding: reflect           # reflection padding followed by a shifted 224x224 crop
+
+patch_shuffle:
+  grid: 4                    # 4x4 grid of 56x56 pixel patches, one non-identity permutation per image
+
+# ---- Part 2: controlled interventions ----
+color:
+  additional: hue_rotation    # hue_rotation | palette_transfer  (the "one additional" transform)
+  hue_degrees: 90             # fixed hue rotation applied to every image
+
+translation:
+  shifts: [0, 8, 16, 32]      # pixels, reflection pad + shifted crop
+  directions: [left, right, up, down]
+
+patch_shuffle:
+  grid: 4                     # 4x4 pixel-space grid, one non-identity permutation per image
