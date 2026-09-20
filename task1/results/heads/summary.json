@@ -1,0 +1,17 @@
+{
+  "resnet50": {
+    "best_epoch": 7,
+    "best_val_acc": 0.9740000367164612,
+    "epochs_run": 12
+  },
+  "vit_b16": {
+    "best_epoch": 9,
+    "best_val_acc": 0.9800000190734863,
+    "epochs_run": 14
+  },
+  "clip_linear": {
+    "best_epoch": 5,
+    "best_val_acc": 0.987000048160553,
+    "epochs_run": 10
+  }
+}
