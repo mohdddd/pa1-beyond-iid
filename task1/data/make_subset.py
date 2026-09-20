@@ -22,9 +22,37 @@ IMAGE_SIZE = 224
 
 
 # ---------- dataset + common base image ----------
+class STL10Split:
+    """Minimal STL-10 reader for the official binary files (train or test).
+
+    Reads stl10_binary/{split}_X.bin and {split}_y.bin directly. Unlike
+    torchvision.datasets.STL10 it does not require the 2.7 GB unlabeled file
+    nor re-hash every file on Drive at each load. Same layout as torchvision:
+    .data uint8 [N,3,96,96], .labels int in 0..9, .classes list[str].
+    """
+
+    def __init__(self, split: str):
+        root = DATA_DIR / "stl10_binary"
+        xf, yf = root / f"{split}_X.bin", root / f"{split}_y.bin"
+        missing = [str(f) for f in (xf, yf, root / "class_names.txt") if not f.exists()]
+        if missing:
+            raise FileNotFoundError(f"STL-10 files missing: {missing}. Is PA1_STORAGE set and "
+                                    f"was STL-10 downloaded to {DATA_DIR}?")
+        x = np.fromfile(xf, dtype=np.uint8)
+        n = x.size // (3 * 96 * 96)
+        if x.size != n * 3 * 96 * 96:
+            raise RuntimeError(f"{xf} has an unexpected size (incomplete download?)")
+        # binary is column-major per channel -> transpose H/W exactly like torchvision
+        self.data = np.transpose(x.reshape(n, 3, 96, 96), (0, 1, 3, 2)).copy()
+        self.labels = np.fromfile(yf, dtype=np.uint8).astype(np.int64) - 1   # stored as 1..10
+        if len(self.labels) != n:
+            raise RuntimeError(f"{yf} has {len(self.labels)} labels but {xf} has {n} images")
+        self.classes = (root / "class_names.txt").read_text().split()
+
+
 def load_stl10(split: str):
-    """split in {'train', 'test'}; already downloaded to Drive by the setup notebook."""
-    return torchvision.datasets.STL10(str(DATA_DIR), split=split, download=False)
+    """split in {'train', 'test'}; files downloaded to Drive by the setup notebook."""
+    return STL10Split(split)
 
 
 def raw_to_pil(raw_chw: np.ndarray) -> Image.Image:
