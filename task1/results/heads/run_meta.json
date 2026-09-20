@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-09-20T15:54:48",
-  "git_commit": "1b3124046fe0505ed3d2a169019ebe69fd0ae0d8",
+  "timestamp": "2026-09-20T20:50:45",
+  "git_commit": "c63c68f32648def9a258a30013779a02d30e7b9e-dirty",
   "python": "3.13.15",
   "torch": "2.11.0+cu128",
   "cuda": "12.8",
@@ -36,6 +36,27 @@
     },
     "zeroshot": {
       "prompt": "a photo of a {}."
+    },
+    "color": {
+      "additional": "hue_rotation",
+      "hue_degrees": 90
+    },
+    "translation": {
+      "shifts": [
+        0,
+        8,
+        16,
+        32
+      ],
+      "directions": [
+        "left",
+        "right",
+        "up",
+        "down"
+      ]
+    },
+    "patch_shuffle": {
+      "grid": 4
     }
   }
 }

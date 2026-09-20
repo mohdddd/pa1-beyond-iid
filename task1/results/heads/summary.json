@@ -10,8 +10,8 @@
     "epochs_run": 14
   },
   "clip_linear": {
-    "best_epoch": 5,
-    "best_val_acc": 0.987000048160553,
-    "epochs_run": 10
+    "best_epoch": 4,
+    "best_val_acc": 0.984000027179718,
+    "epochs_run": 9
   }
 }
