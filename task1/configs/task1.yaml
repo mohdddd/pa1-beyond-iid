@@ -1,0 +1,29 @@
+# Task 1 configuration. Every value used for reported results lives here.
+dataset: stl10
+seed: 6304
+num_classes: 10
+
+base_image:
+  size: 224                 # common 224x224 RGB image fed to every model / intervention
+  resize_from: 96           # STL-10 native resolution
+  interpolation: bicubic
+
+split:
+  val_fraction: 0.2         # stratified 80/20 of the official train partition
+
+test_subset:
+  per_class: 50             # 10 classes x 50 = 500 class-balanced test images
+
+backbones: [resnet50, vit_b16, clip_vitb32]
+feature_batch_size: 128
+
+head:
+  optimizer: adamw
+  lr: 0.001
+  weight_decay: 0.0001
+  max_epochs: 50
+  patience: 5               # early stopping on validation accuracy
+  batch_size: 64            # not fixed by the manual; chosen and documented here
+
+zeroshot:
+  prompt: "a photo of a {}."
