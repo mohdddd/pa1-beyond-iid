@@ -11,7 +11,8 @@ import torch
 from common.io import load_json, save_json
 from common.metrics import classification_metrics, prediction_consistency
 from common.plotting import savefig, setup_style
-from task1.configs import BACKBONES, HEAD_OF, MODELS, RESULTS, shift_condition, split
+from task1.configs import (BACKBONES, CUE_ACCEPTED, CUE_META, CUE_REVIEW, HEAD_OF,
+                           MODELS, RESULTS, shift_condition, split)
 from task1.models.backbones import load_features
 from task1.models.heads import load_head, load_zeroshot
 
@@ -112,4 +113,74 @@ def plot_translation(curve: pd.DataFrame, name: str = "task1_translation") -> No
     axes[1].set_xlabel("displacement (px)"); axes[1].set_ylabel("prediction consistency")
     axes[1].legend(frameon=False)
     fig.suptitle("Translation (mean over 4 cardinal directions)", fontsize=10)
+    savefig(fig, name, subdir="task1")
+
+
+# ---------------- cue conflicts: shape bias and coverage (Part 3) ----------------
+def evaluate_cue_conflict(device=None) -> pd.DataFrame:
+    """Classifies each prediction as the content/shape label, the style/texture
+    label, or another label, and reports shape bias and coverage per model.
+
+        Shape Bias = N_shape / (N_shape + N_texture)
+        Coverage   = (N_shape + N_texture) / N_total
+    """
+    meta, review = load_json(CUE_META), load_json(CUE_REVIEW)
+    rows = pd.DataFrame([meta["rows"][i] for i in review["accepted"]]).reset_index(drop=True)
+    probs = probabilities(CUE_ACCEPTED, device)
+    per_image = rows.copy()
+    out = []
+    for m in MODELS:
+        pred = probs[m].argmax(1)
+        conf = probs[m].max(1)
+        per_image[f"{m}_pred"] = pred
+        per_image[f"{m}_conf"] = conf
+        shape = int((pred == rows["content_label"].to_numpy()).sum())
+        texture = int((pred == rows["style_label"].to_numpy()).sum())
+        other = len(rows) - shape - texture
+        decided = shape + texture
+        per_image[f"{m}_decision"] = np.where(pred == rows["content_label"].to_numpy(), "shape",
+                                      np.where(pred == rows["style_label"].to_numpy(), "texture", "other"))
+        out.append({"model": m, "n_shape": shape, "n_texture": texture, "n_other": other,
+                    "shape_bias_pct": 100.0 * shape / decided if decided else float("nan"),
+                    "coverage_pct": 100.0 * decided / len(rows),
+                    "mean_max_conf": float(conf.mean())})
+    (RESULTS / "predictions").mkdir(parents=True, exist_ok=True)
+    per_image.to_csv(RESULTS / "predictions" / "cue_conflict_per_image.csv", index=False)
+    df = pd.DataFrame(out)
+    save_json({"n_accepted": len(rows), "n_generated": review["generated"],
+               "n_rejected": review["n_rejected"], "rule": review["rule"],
+               "alpha": meta["alpha"], "per_model": out},
+              RESULTS / "metrics" / "cue_conflict.json")
+    return df
+
+
+def cue_conflict_by_pair(model: str = "resnet50") -> pd.DataFrame:
+    """Shape bias per class pair and direction, for one model."""
+    df = pd.read_csv(RESULTS / "predictions" / "cue_conflict_per_image.csv")
+    g = df.groupby(["pair", "direction"])[f"{model}_decision"].value_counts().unstack(fill_value=0)
+    for col in ("shape", "texture", "other"):
+        if col not in g:
+            g[col] = 0
+    g["shape_bias_pct"] = 100 * g["shape"] / (g["shape"] + g["texture"]).replace(0, np.nan)
+    g["coverage_pct"] = 100 * (g["shape"] + g["texture"]) / g[["shape", "texture", "other"]].sum(axis=1)
+    return g.reset_index()
+
+
+def plot_cue_examples(n: int = 8, name: str = "task1_cue_examples") -> None:
+    """Informative agreements / disagreements between models, with predictions."""
+    import matplotlib.pyplot as plt
+    from task1.data.make_subset import load_images
+    setup_style()
+    df = pd.read_csv(RESULTS / "predictions" / "cue_conflict_per_image.csv")
+    classes = split()["classes"]
+    imgs = load_images(CUE_ACCEPTED)
+    disagree = df[df[[f"{m}_decision" for m in MODELS]].nunique(axis=1) > 1]
+    pick = pd.concat([disagree.head(n // 2), df.drop(disagree.index).head(n - n // 2)]).head(n)
+    fig, axes = plt.subplots(2, n // 2, figsize=(2.1 * (n // 2), 5.4))
+    for ax, (_, r) in zip(np.ravel(axes), pick.iterrows()):
+        ax.imshow(imgs[r.name].permute(1, 2, 0).numpy())
+        ax.axis("off")
+        txt = "\n".join(f"{m.replace('clip_', 'clip-')}: {classes[int(r[f'{m}_pred'])]}" for m in MODELS)
+        ax.set_title(f"shape {r.content_class} / texture {r.style_class}\n{txt}", fontsize=6)
+    fig.tight_layout()
     savefig(fig, name, subdir="task1")

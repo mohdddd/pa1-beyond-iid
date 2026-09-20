@@ -21,11 +21,15 @@ import torch
 from common.io import save_json, save_run_metadata
 from common.paths import TABLE_DIR
 from common.seed import set_seed
-from task1.analysis.evaluate_bias import (evaluate_condition, plot_translation,
-                                          summarize_conditions, translation_curve)
-from task1.configs import (BACKBONES, HEAD_OF, MODELS, RESULTS, cfg, color_condition,
-                           patch_condition, shift_condition, split)
+from task1.analysis.evaluate_bias import (cue_conflict_by_pair, evaluate_cue_conflict,
+                                          evaluate_condition, plot_cue_examples,
+                                          plot_translation, summarize_conditions,
+                                          translation_curve)
+from task1.configs import (BACKBONES, CUE_ACCEPTED, CUE_CANDIDATES, HEAD_OF, MODELS,
+                           RESULTS, cfg, color_condition, patch_condition,
+                           shift_condition, split)
 from task1.data import transforms as T
+from task1.data import make_cue_conflicts as CC
 from task1.data.make_subset import (base_images, delete_images, images_exist, load_images,
                                     load_stl10, make_subset, save_grid, save_images)
 from task1.models.backbones import (extract, has_features, load_backbone, load_features,
@@ -184,7 +188,32 @@ def stage_summary():
     _print(df)
 
 
-STAGES = ["subset", "features", "heads", "clean", "color", "patch", "translation", "summary", "all"]
+def stage_cue_generate():
+    """Generate the AdaIN cue-conflict candidates (no model predictions involved)."""
+    CC.generate_candidates(DEVICE)
+    CC.contact_sheets()
+    print("\nNext: review the sheets in the notebook, then record the rejections "
+          "before running --stage cue_eval")
+
+
+def stage_cue_eval():
+    """Build the accepted condition, extract features, report shape bias + coverage."""
+    CC.build_accepted()
+    stage_features([CUE_ACCEPTED])
+    df = evaluate_cue_conflict(DEVICE)
+    df.to_csv(TABLE_DIR / "task1_shape_bias.csv", index=False)
+    _print(df)
+    for m in MODELS:
+        by_pair = cue_conflict_by_pair(m)
+        by_pair.insert(0, "model", m)
+        by_pair.to_csv(RESULTS / "metrics" / f"cue_conflict_by_pair_{m}.csv", index=False)
+    print("\nshape bias by pair (resnet50)")
+    _print(cue_conflict_by_pair("resnet50"))
+    plot_cue_examples()
+
+
+STAGES = ["subset", "features", "heads", "clean", "color", "patch", "translation", "summary",
+          "cue_generate", "cue_eval", "all"]
 
 
 def main():
@@ -211,6 +240,10 @@ def main():
         stage_translation(a.overwrite, a.keep_images)
     if a.stage in ("summary", "all"):
         stage_summary()
+    if a.stage == "cue_generate":
+        stage_cue_generate()
+    if a.stage == "cue_eval":
+        stage_cue_eval()
 
 
 if __name__ == "__main__":

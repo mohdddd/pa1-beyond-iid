@@ -53,3 +53,9 @@ def patch_condition(c: dict) -> str:
 
 def shift_condition(delta: int, direction: str) -> str:
     return f"test_shift{delta}_{direction}"
+
+
+CUE_CANDIDATES = "cue_candidates"      # all generated conflicts (image store)
+CUE_ACCEPTED = "test_cue_conflict"     # the accepted subset used for evaluation
+CUE_META = TASK_DIR / "data" / "cue_conflict_meta.json"       # content/style of each candidate
+CUE_REVIEW = TASK_DIR / "data" / "cue_conflict_review.json"   # rejection rule + rejected rows

@@ -53,3 +53,16 @@ translation:
 
 patch_shuffle:
   grid: 4                     # 4x4 pixel-space grid, one non-identity permutation per image
+
+# ---- Part 3: cue conflicts (shape vs texture) ----
+cue_conflict:
+  pairs:                      # >= 5 unordered class pairs, both directions generated
+    - [cat, dog]
+    - [car, truck]
+    - [deer, horse]
+    - [airplane, ship]
+    - [bird, monkey]
+  alpha: 0.8                  # AdaIN strength: 1.0 = full stylisation
+  per_group: 30               # 5 pairs x 2 directions x 30 = 300 candidates
+  min_accepted: 200           # the manual requires at least 200 valid conflicts
+  sheet_size: 25              # contact-sheet size for manual review
