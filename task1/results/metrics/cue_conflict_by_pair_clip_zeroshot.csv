@@ -1,0 +1,11 @@
+model,pair,direction,other,shape,texture,shape_bias_pct,coverage_pct
+clip_zeroshot,airplane-ship,airplane->ship,0,19,3,86.36363636363636,100.0
+clip_zeroshot,airplane-ship,ship->airplane,0,22,0,100.0,100.0
+clip_zeroshot,bird-monkey,bird->monkey,1,25,0,100.0,96.15384615384616
+clip_zeroshot,bird-monkey,monkey->bird,0,15,5,75.0,100.0
+clip_zeroshot,car-truck,car->truck,0,24,2,92.3076923076923,100.0
+clip_zeroshot,car-truck,truck->car,0,21,1,95.45454545454545,100.0
+clip_zeroshot,cat-dog,cat->dog,4,14,1,93.33333333333333,78.94736842105263
+clip_zeroshot,cat-dog,dog->cat,2,21,0,100.0,91.30434782608695
+clip_zeroshot,deer-horse,deer->horse,0,25,0,100.0,100.0
+clip_zeroshot,deer-horse,horse->deer,0,26,0,100.0,100.0

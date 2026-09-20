@@ -1,0 +1,11 @@
+model,pair,direction,other,shape,texture,shape_bias_pct,coverage_pct
+resnet50,airplane-ship,airplane->ship,0,17,5,77.27272727272727,100.0
+resnet50,airplane-ship,ship->airplane,0,21,1,95.45454545454545,100.0
+resnet50,bird-monkey,bird->monkey,1,25,0,100.0,96.15384615384616
+resnet50,bird-monkey,monkey->bird,1,11,8,57.89473684210526,95.0
+resnet50,car-truck,car->truck,0,25,1,96.15384615384616,100.0
+resnet50,car-truck,truck->car,2,19,1,95.0,90.9090909090909
+resnet50,cat-dog,cat->dog,7,11,1,91.66666666666667,63.1578947368421
+resnet50,cat-dog,dog->cat,4,15,4,78.94736842105263,82.6086956521739
+resnet50,deer-horse,deer->horse,1,23,1,95.83333333333333,96.0
+resnet50,deer-horse,horse->deer,0,20,6,76.92307692307692,100.0

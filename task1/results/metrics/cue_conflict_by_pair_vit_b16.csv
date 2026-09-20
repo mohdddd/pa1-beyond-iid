@@ -1,0 +1,11 @@
+model,pair,direction,other,shape,texture,shape_bias_pct,coverage_pct
+vit_b16,airplane-ship,airplane->ship,0,22,0,100.0,100.0
+vit_b16,airplane-ship,ship->airplane,0,20,2,90.9090909090909,100.0
+vit_b16,bird-monkey,bird->monkey,2,23,1,95.83333333333333,92.3076923076923
+vit_b16,bird-monkey,monkey->bird,1,19,0,100.0,95.0
+vit_b16,car-truck,car->truck,0,25,1,96.15384615384616,100.0
+vit_b16,car-truck,truck->car,2,19,1,95.0,90.9090909090909
+vit_b16,cat-dog,cat->dog,3,16,0,100.0,84.21052631578948
+vit_b16,cat-dog,dog->cat,2,20,1,95.23809523809524,91.30434782608695
+vit_b16,deer-horse,deer->horse,0,25,0,100.0,100.0
+vit_b16,deer-horse,horse->deer,0,25,1,96.15384615384616,100.0

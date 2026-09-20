@@ -1,0 +1,45 @@
+{
+  "n_accepted": 231,
+  "n_generated": 300,
+  "n_rejected": 69,
+  "rule": "Rejected if the content object was no longer identifiable as its class, or if the style transfer was so weak that the image looked unstyled.",
+  "alpha": 0.8,
+  "per_model": [
+    {
+      "model": "resnet50",
+      "n_shape": 187,
+      "n_texture": 28,
+      "n_other": 16,
+      "shape_bias_pct": 86.97674418604652,
+      "coverage_pct": 93.07359307359307,
+      "mean_max_conf": 0.8497063517570496
+    },
+    {
+      "model": "vit_b16",
+      "n_shape": 214,
+      "n_texture": 7,
+      "n_other": 10,
+      "shape_bias_pct": 96.83257918552036,
+      "coverage_pct": 95.67099567099567,
+      "mean_max_conf": 0.9203575253486633
+    },
+    {
+      "model": "clip_linear",
+      "n_shape": 215,
+      "n_texture": 9,
+      "n_other": 7,
+      "shape_bias_pct": 95.98214285714286,
+      "coverage_pct": 96.96969696969697,
+      "mean_max_conf": 0.23662333190441132
+    },
+    {
+      "model": "clip_zeroshot",
+      "n_shape": 212,
+      "n_texture": 12,
+      "n_other": 7,
+      "shape_bias_pct": 94.64285714285714,
+      "coverage_pct": 96.96969696969697,
+      "mean_max_conf": 0.8930792212486267
+    }
+  ]
+}
