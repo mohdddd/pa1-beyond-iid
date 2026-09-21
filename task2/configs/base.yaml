@@ -26,5 +26,5 @@ train:
   max_epochs: 30
   patience: 5                # stop after 5 epochs without improved selection metric
   selection_metric: val_mean_macro_f1   # mean macro-F1 over the 3 source val splits
-  amp: true                  # fp16 autocast on GPU; losses computed in fp32
+  amp: false                 # fp32 for all methods: fp16 overflowed under gradient reversal
   log_every: 10              # steps between step-level log rows
