@@ -1,0 +1,8 @@
+# Task 2 Step 4: CDAN — discriminator on vec(f ⊗ p) (3584-d); same settings as DANN.
+run_name: cdan
+method:
+  name: cdan
+  disc_hidden: 256
+  disc_dropout: 0.5
+  domain_loss_weight: 1.0
+  grl_max: 1.0

@@ -1,0 +1,6 @@
+# Task 2 Step 2: DAN — MMD between source (24) and target (24) 512-d features.
+run_name: dan
+method:
+  name: dan
+  lambda_mmd: 1.0
+  kernel_mults: [0.5, 1.0, 2.0]   # x median pairwise squared distance of the combined batch
