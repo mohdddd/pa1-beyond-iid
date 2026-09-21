@@ -1,0 +1,8 @@
+domain,split,n,dog,elephant,giraffe,guitar,horse,house,person
+photo,train,1336,151,161,146,149,159,224,346
+photo,val,334,38,41,36,37,40,56,86
+art_painting,train,1638,303,204,228,147,161,236,359
+art_painting,val,410,76,51,57,37,40,59,90
+cartoon,train,1875,311,366,277,108,259,230,324
+cartoon,val,469,78,91,69,27,65,58,81
+sketch,unlabeled_all,3929,,,,,,,
