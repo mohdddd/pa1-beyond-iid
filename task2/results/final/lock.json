@@ -1,0 +1,30 @@
+{
+  "git_commit": "523836ec3d38a8a54152ad2e937747ef8ecaabc0",
+  "runs": {
+    "source_only": {
+      "sha256": "bb886eb3adde2c4f0f9236370b361a246a59a3a03189b09120fa169407cded1d",
+      "best_epoch": 3
+    },
+    "dan": {
+      "sha256": "ae0f5cf094ad3122d470a5bb93ae30b32b65c92075f3cdb148e8d2efc4ce0255",
+      "best_epoch": 11
+    },
+    "dann": {
+      "sha256": "88b239f2b3b7328121e84f1f9c15c9a855ad98ca071c517fb7a1c3787cccc931",
+      "best_epoch": 4
+    },
+    "cdan": {
+      "sha256": "3a1656adbae5e2beddf564bdc51ce0c522a3b75adeab27c6860bcd04c8e50403",
+      "best_epoch": 2
+    },
+    "dan_lmmd0p1": {
+      "sha256": "3d29b088b11b5f367fde65b70845c9841d8c7c9c045bf79efcb56c75a258f923",
+      "best_epoch": 15
+    },
+    "dan_lmmd10": {
+      "sha256": "3f3e761ad3e0f1981551f1bbf460f1dde9f4ab9d87c6a23a5367425cbffe2399",
+      "best_epoch": 1
+    }
+  },
+  "note": "All Task 2 checkpoints/settings fixed before Sketch labels were loaded."
+}

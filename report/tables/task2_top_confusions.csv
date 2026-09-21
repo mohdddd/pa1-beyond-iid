@@ -1,0 +1,29 @@
+method,true_class,class_acc,conf1,conf2
+source_only,dog,0.2539,"person (376, 0.49)","elephant (100, 0.13)"
+source_only,elephant,0.7149,"person (192, 0.26)","dog (14, 0.02)"
+source_only,giraffe,0.3426,"person (248, 0.33)","horse (137, 0.18)"
+source_only,guitar,0.9178,"person (46, 0.08)","elephant (2, 0.00)"
+source_only,horse,0.6924,"person (133, 0.16)","elephant (73, 0.09)"
+source_only,house,0.675,"person (21, 0.26)","elephant (3, 0.04)"
+source_only,person,0.9562,"elephant (7, 0.04)",
+dan,dog,0.6425,"person (158, 0.20)","house (78, 0.10)"
+dan,elephant,0.5878,"person (123, 0.17)","dog (92, 0.12)"
+dan,giraffe,0.5339,"person (176, 0.23)","house (75, 0.10)"
+dan,guitar,0.5872,"person (171, 0.28)","house (66, 0.11)"
+dan,horse,0.6152,"dog (96, 0.12)","house (95, 0.12)"
+dan,house,1.0,,
+dan,person,0.3875,"house (98, 0.61)",
+dann,dog,0.0415,"person (484, 0.63)","giraffe (217, 0.28)"
+dann,elephant,0.0041,"person (508, 0.69)","giraffe (142, 0.19)"
+dann,giraffe,0.2683,"person (492, 0.65)","dog (41, 0.05)"
+dann,guitar,0.0,"person (353, 0.58)","dog (180, 0.30)"
+dann,horse,0.0931,"person (529, 0.65)","giraffe (179, 0.22)"
+dann,house,0.0,"person (49, 0.61)","giraffe (28, 0.35)"
+dann,person,0.5562,"giraffe (69, 0.43)","dog (2, 0.01)"
+cdan,dog,0.1477,"elephant (254, 0.33)","horse (236, 0.31)"
+cdan,elephant,0.9608,"person (19, 0.03)","giraffe (3, 0.00)"
+cdan,giraffe,0.672,"horse (151, 0.20)","person (45, 0.06)"
+cdan,guitar,0.9161,"elephant (30, 0.05)","person (10, 0.02)"
+cdan,horse,0.81,"elephant (100, 0.12)","giraffe (24, 0.03)"
+cdan,house,1.0,,
+cdan,person,0.9562,"elephant (5, 0.03)","horse (1, 0.01)"
