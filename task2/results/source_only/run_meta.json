@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-09-21T19:08:20",
-  "git_commit": "b1e3191cbc24f88100158ae642524b0780c87706",
+  "timestamp": "2026-09-21T20:10:42",
+  "git_commit": "e157aa8ace219464a12d9a3a93aaafb3915c67f0-dirty",
   "python": "3.13.15",
   "torch": "2.11.0+cu128",
   "cuda": "12.8",
@@ -39,7 +39,7 @@
       "max_epochs": 30,
       "patience": 5,
       "selection_metric": "val_mean_macro_f1",
-      "amp": true,
+      "amp": false,
       "log_every": 10
     },
     "run_name": "source_only",
@@ -49,14 +49,14 @@
   },
   "run_name": "source_only",
   "method": "source_only",
-  "best_epoch": 4,
-  "best_val_mean_macro_f1": 0.9300563672109554,
-  "epochs_run": 9,
+  "best_epoch": 3,
+  "best_val_mean_macro_f1": 0.9369248142822663,
+  "epochs_run": 8,
   "stop_reason": "early_stopping",
-  "global_steps": 1827,
-  "train_time_s": 208.8,
+  "global_steps": 1624,
+  "train_time_s": 207.7,
   "best_ckpt": "/content/drive/MyDrive/PA1_storage/checkpoints/task2/source_only/best.pt",
-  "best_sha256": "cda552cdd168308b180e0687336f3724002bb92380bd7ff22e731f1d1b9badcf",
+  "best_sha256": "bb886eb3adde2c4f0f9236370b361a246a59a3a03189b09120fa169407cded1d",
   "bn_running_stats_equal_imagenet": true,
   "bn_modules_frozen": 20
 }
