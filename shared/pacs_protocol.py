@@ -271,7 +271,9 @@ def _sample_figure(splits, n_per_class: int = 1):
         if c == 0:
             ax.set_ylabel("sketch\n(random)", fontsize=9)
     fig.tight_layout()
-    return savefig(fig, "pacs_samples", "task2")
+    savefig(fig, "pacs_samples", "task2")
+    from common.paths import FIG_DIR
+    return FIG_DIR / "task2" / "pacs_samples.pdf"
 
 
 def cmd_prepare(args):

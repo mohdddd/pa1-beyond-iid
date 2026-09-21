@@ -1,0 +1,30 @@
+# Shared Task 2 settings (manual §2 "Dataset, Models, and Experimental Setup").
+# Every method config is merged on top of this file; only `method` differs.
+seed: 6304
+data:
+  splits: shared/splits/pacs_sketch_seed6304.json
+  sources: [photo, art_painting, cartoon]
+  target: sketch
+  per_source_batch: 8        # 8 per source domain per update
+  target_batch: 24           # adaptation methods only (equal source/target totals)
+  steps_per_epoch: 203       # ceil(4849 pooled source-train / 24) — our epoch definition
+  num_workers: 2
+  resize: 256                # 256x256 -> random 224 crop + hflip (train) / center crop (eval)
+  crop: 224
+model:
+  arch: resnet18
+  weights: IMAGENET1K_V1
+  feat_dim: 512
+  num_classes: 7
+  freeze_bn_running_stats: true   # BN mean/var frozen at ImageNet values; gamma/beta trainable
+optim:
+  name: adamw
+  lr: 1.0e-4
+  weight_decay: 1.0e-4       # applied to all trainable parameters (plain AdamW)
+  lr_schedule: constant      # manual specifies none
+train:
+  max_epochs: 30
+  patience: 5                # stop after 5 epochs without improved selection metric
+  selection_metric: val_mean_macro_f1   # mean macro-F1 over the 3 source val splits
+  amp: true                  # fp16 autocast on GPU; losses computed in fp32
+  log_every: 10              # steps between step-level log rows
