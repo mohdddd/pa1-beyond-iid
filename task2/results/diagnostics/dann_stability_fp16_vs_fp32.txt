@@ -1,0 +1,30 @@
+# DANN training-stability probe, first 300 steps (T4, 2026-09-21)
+# Command: PYTHONPATH=. python -m task2.evaluation.stability_probe dann {amp|fp32} 300
+# Settings identical to task2/configs/dann.yaml (seed 6304, AdamW lr 1e-4, frozen BN, GRL schedule).
+# "peak" = max |activation| of each ResNet-18 stage over the preceding 25 steps.
+# Note: the original run crashed while printing an infinite peak (OverflowError); the probe
+# script now prints "inf" instead.
+
+## fp16 autocast (amp)
+25 loss 1.136 {'cls_loss': 0.643, 'domain_loss': 0.493, 'disc_acc': 0.792, 'alpha': 0.02} | peak: {'layer1': 9, 'layer2': 8, 'layer3': 5, 'layer4': 42, 'avgpool': 20}
+50 loss 1.091 {'cls_loss': 0.7, 'domain_loss': 0.391, 'disc_acc': 0.875, 'alpha': 0.04} | peak: {'layer1': 10, 'layer2': 8, 'layer3': 8, 'layer4': 69, 'avgpool': 30}
+75 loss 0.787 {'cls_loss': 0.263, 'domain_loss': 0.524, 'disc_acc': 0.771, 'alpha': 0.061} | peak: {'layer1': 9, 'layer2': 8, 'layer3': 9, 'layer4': 77, 'avgpool': 26}
+100 loss 0.997 {'cls_loss': 0.231, 'domain_loss': 0.766, 'disc_acc': 0.521, 'alpha': 0.081} | peak: {'layer1': 9, 'layer2': 9, 'layer3': 10, 'layer4': 80, 'avgpool': 29}
+125 loss 1.713 {'cls_loss': 0.269, 'domain_loss': 1.444, 'disc_acc': 0.229, 'alpha': 0.101} | peak: {'layer1': 10, 'layer2': 9, 'layer3': 9, 'layer4': 91, 'avgpool': 29}
+150 loss 271.176 {'cls_loss': 15.229, 'domain_loss': 255.947, 'disc_acc': 0.271, 'alpha': 0.122} | peak: {'layer1': 9, 'layer2': 8, 'layer3': 9, 'layer4': 3266, 'avgpool': 1876}
+(next window: a peak activation was infinite -> fp16 overflow; the training run reported a non-finite loss at step 160)
+
+## fp32
+25 loss 1.207 {'cls_loss': 0.735, 'domain_loss': 0.472, 'disc_acc': 0.792, 'alpha': 0.02} | peak: {'layer1': 9, 'layer2': 8, 'layer3': 5, 'layer4': 42, 'avgpool': 19}
+50 loss 0.838 {'cls_loss': 0.538, 'domain_loss': 0.3, 'disc_acc': 0.958, 'alpha': 0.04} | peak: {'layer1': 10, 'layer2': 8, 'layer3': 7, 'layer4': 59, 'avgpool': 25}
+75 loss 0.883 {'cls_loss': 0.371, 'domain_loss': 0.512, 'disc_acc': 0.771, 'alpha': 0.061} | peak: {'layer1': 9, 'layer2': 8, 'layer3': 10, 'layer4': 82, 'avgpool': 25}
+100 loss 0.980 {'cls_loss': 0.328, 'domain_loss': 0.652, 'disc_acc': 0.5, 'alpha': 0.081} | peak: {'layer1': 9, 'layer2': 9, 'layer3': 9, 'layer4': 84, 'avgpool': 30}
+125 loss 1.259 {'cls_loss': 0.247, 'domain_loss': 1.013, 'disc_acc': 0.312, 'alpha': 0.101} | peak: {'layer1': 10, 'layer2': 9, 'layer3': 8, 'layer4': 89, 'avgpool': 31}
+150 loss 57.642 {'cls_loss': 1.513, 'domain_loss': 56.128, 'disc_acc': 0.354, 'alpha': 0.122} | peak: {'layer1': 9, 'layer2': 9, 'layer3': 8, 'layer4': 670, 'avgpool': 353}
+175 loss 162.979 {'cls_loss': 108.859, 'domain_loss': 54.12, 'disc_acc': 0.417, 'alpha': 0.142} | peak: {'layer1': 13, 'layer2': 29, 'layer3': 774, 'layer4': 3542175, 'avgpool': 2049248}
+200 loss 50.458 {'cls_loss': 23.011, 'domain_loss': 27.447, 'disc_acc': 0.5, 'alpha': 0.162} | peak: {'layer1': 14, 'layer2': 30, 'layer3': 773, 'layer4': 13841, 'avgpool': 7796}
+225 loss 11.782 {'cls_loss': 3.105, 'domain_loss': 8.676, 'disc_acc': 0.521, 'alpha': 0.182} | peak: {'layer1': 15, 'layer2': 29, 'layer3': 958, 'layer4': 4407, 'avgpool': 2531}
+250 loss 10.086 {'cls_loss': 2.867, 'domain_loss': 7.219, 'disc_acc': 0.542, 'alpha': 0.202} | peak: {'layer1': 14, 'layer2': 27, 'layer3': 850, 'layer4': 2367, 'avgpool': 1145}
+275 loss 10.867 {'cls_loss': 1.889, 'domain_loss': 8.979, 'disc_acc': 0.5, 'alpha': 0.221} | peak: {'layer1': 15, 'layer2': 29, 'layer3': 851, 'layer4': 3059, 'avgpool': 1502}
+300 loss 16.786 {'cls_loss': 2.444, 'domain_loss': 14.343, 'disc_acc': 0.5, 'alpha': 0.241} | peak: {'layer1': 15, 'layer2': 31, 'layer3': 838, 'layer4': 4052, 'avgpool': 1958}
+finished fp32
