@@ -30,8 +30,6 @@ python -m task2.train --config task2/configs/cdan.yaml
   p = step / (30 x 203) (maximum budget, unaffected by early stopping); loss = CE(source) + 1 x CE_domain(source+target).
 * CDAN: same as DANN but the discriminator sees vec(f ⊗ softmax(C(f))) (3584-d); no entropy
   conditioning, nothing detached. Discriminators are trained by the same AdamW optimiser.
-* The optimisation step is `Method.update` (`methods/base.py`), added for Task 3 SAM; the default is
-  verified bit-identical to the step used for all Task 2 runs (see `task3/README.md`).
 * ResNet-18 `IMAGENET1K_V1`, fc -> Identity (512-d feature), 7-class linear head, full fine-tuning.
 * BatchNorm running mean/var frozen at ImageNet values (BN modules in eval mode after
   `model.train()`); gamma/beta trainable. Verified after training (`bn_running_stats_equal_imagenet`).
@@ -45,6 +43,23 @@ python -m task2.train --config task2/configs/cdan.yaml
   never retrained without `--fresh`; `run_meta.json` records the SHA-256 of `best.pt`, so the
   Task 3 ERM baseline can be verified to be this exact file.
 * Results per run: `task2/results/<run>/{train_steps.csv, train_epochs.csv, source_val.json, run_meta.json}`.
+
+## Alignment-branch stabilisation (documented deviation)
+Under the prescribed protocol (AdamW 1e-4 for all parameters, frozen BN, GRL schedule) DANN and CDAN
+diverge and DAN λ=10 collapses: the alignment branch is minimised by changing the FEATURE SCALE rather
+than its direction (DANN feature norm 42 -> 2500+ within 300 steps and layer-4 activations 42 -> 3.5e6;
+DAN λ=10 collapses to one predicted class). Two switches in `configs/base.yaml` remove that escape route:
+* `align.l2_normalize: true` — the feature copy passed to MMD / the discriminator is L2-normalised.
+  The classifier still receives the raw 512-d feature, so **Source-only / Task 3 ERM is mathematically
+  unchanged** (verified: identical loss with the switch on and off) and its checkpoint is reused as-is.
+* `align.detach_mmd_median: false` — the median-heuristic bandwidth is differentiable. With L2 alone,
+  DAN λ=10 still escaped by inflating the raw feature norm (the gradient through the normalisation
+  scales as 1/||f||), which a detached bandwidth cannot see.
+Evidence: `evaluation/stability_probe.py` and `results/diagnostics/*.txt` (300-step probes, before/after);
+the unstabilised runs are archived in `results/unstable/` and compared in
+`report/tables/task2_stabilisation_comparison.csv` (`python -m task2.evaluation.compare_stabilisation`).
+Both switches apply to DAN / DANN / CDAN here and to DAN-DG in Task 3, keeping the MMD mechanism identical
+across the two tasks.
 
 ## Controlled study (DAN, λ_MMD ∈ {0.1, 1, 10})
 ```
@@ -76,7 +91,8 @@ models/      backbone.py (ResNet-18 + frozen-BN policy), classifier_head.py (hea
              domain_discriminator.py (discriminator, GRL, alpha schedule)
 methods/     base.py (common interface), source_only.py, dan.py (mmd2 reused by Task 3), dann.py, cdan.py
 evaluation/  metrics.py (per-domain / mean / worst metrics), domain_separability.py, class_analysis.py,
-             curves.py (training-curve / study figures), stability_probe.py (diagnostic)
+             curves.py (training-curve / study figures), stability_probe.py (diagnostic),
+             compare_stabilisation.py (before/after table)
 train.py         single training loop for all methods
 evaluate_final.py  lock + final Sketch evaluation, separability, per-class analysis, tables, figures
 ```

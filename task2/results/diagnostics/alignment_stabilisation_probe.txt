@@ -1,0 +1,47 @@
+# Alignment-branch stabilisation probe — 300 steps each, fp32, T4, 2026-09-22
+# Command: PYTHONPATH=. python -m task2.evaluation.stability_probe <method> fp32 300 [overrides]
+# "peak" = max |activation| per ResNet-18 stage over the preceding 25 steps; feat_norm = mean ||f||_2
+# of the RAW 512-d feature. Decision: adopt align.l2_normalize=true AND align.detach_mmd_median=false
+# for every alignment method (Source-only/ERM has no alignment branch and is unaffected).
+#
+# SUMMARY (step 300)
+#   dann, no switches                     : cls 2.444  feat_norm 2538   layer4 4052      -> diverged
+#   dann, l2_normalize                    : cls 0.044  feat_norm 62     layer4 98        -> stable
+#   cdan, l2_normalize                    : cls 0.126  feat_norm 60     layer4 119       -> stable
+#   dan λ=10, l2_normalize                : cls 2.982  feat_norm 1223   layer4 476       -> still failing
+#   dan λ=10, l2_normalize + diff. median : cls 0.443  feat_norm 54     layer4 207       -> stable
+# With L2 only, DAN λ=10 escapes the penalty by inflating the raw feature norm (the gradient through the
+# normalisation scales as 1/||f||); a detached median bandwidth does not react to that, a differentiable
+# one does.
+
+## dann, no switches (baseline; reproduces the divergence of the reported unstable run)
+25  loss 1.207  {'cls_loss': 0.735, 'domain_loss': 0.472, 'disc_acc': 0.792, 'alpha': 0.02, 'feat_norm': 42.284} | peak: {'layer1': 9, 'layer2': 8, 'layer3': 5, 'layer4': 42, 'avgpool': 19}
+125 loss 1.259  {'cls_loss': 0.247, 'domain_loss': 1.013, 'disc_acc': 0.312, 'alpha': 0.101, 'feat_norm': 59.922} | peak: {'layer1': 10, 'layer2': 9, 'layer3': 8, 'layer4': 89, 'avgpool': 31}
+150 loss 57.642 {'cls_loss': 1.513, 'domain_loss': 56.128, 'disc_acc': 0.354, 'alpha': 0.122, 'feat_norm': 869.204} | peak: {'layer1': 9, 'layer2': 9, 'layer3': 8, 'layer4': 670, 'avgpool': 353}
+175 loss 162.979 {'cls_loss': 108.859, 'domain_loss': 54.12, 'disc_acc': 0.417, 'alpha': 0.142, 'feat_norm': 7809.271} | peak: {'layer1': 13, 'layer2': 29, 'layer3': 774, 'layer4': 3542175, 'avgpool': 2049248}
+300 loss 16.786 {'cls_loss': 2.444, 'domain_loss': 14.343, 'disc_acc': 0.5, 'alpha': 0.241, 'feat_norm': 2538.5} | peak: {'layer1': 15, 'layer2': 31, 'layer3': 838, 'layer4': 4052, 'avgpool': 1958}
+
+## dann, align.l2_normalize=true
+25  loss 1.411 {'cls_loss': 0.729, 'domain_loss': 0.681, 'disc_acc': 0.625, 'alpha': 0.02, 'feat_norm': 42.053} | peak: {'layer1': 9, 'layer2': 8, 'layer3': 5, 'layer4': 42, 'avgpool': 19}
+125 loss 0.799 {'cls_loss': 0.193, 'domain_loss': 0.605, 'disc_acc': 0.875, 'alpha': 0.101, 'feat_norm': 45.126} | peak: {'layer1': 10, 'layer2': 9, 'layer3': 8, 'layer4': 89, 'avgpool': 32}
+200 loss 0.729 {'cls_loss': 0.099, 'domain_loss': 0.629, 'disc_acc': 0.771, 'alpha': 0.162, 'feat_norm': 40.635} | peak: {'layer1': 10, 'layer2': 10, 'layer3': 8, 'layer4': 106, 'avgpool': 31}
+250 loss 0.930 {'cls_loss': 0.16, 'domain_loss': 0.769, 'disc_acc': 0.208, 'alpha': 0.202, 'feat_norm': 43.191} | peak: {'layer1': 10, 'layer2': 9, 'layer3': 10, 'layer4': 104, 'avgpool': 31}
+300 loss 0.835 {'cls_loss': 0.044, 'domain_loss': 0.79, 'disc_acc': 0.083, 'alpha': 0.241, 'feat_norm': 62.278} | peak: {'layer1': 10, 'layer2': 9, 'layer3': 9, 'layer4': 98, 'avgpool': 28}
+
+## cdan, align.l2_normalize=true
+25  loss 1.398 {'cls_loss': 0.72, 'domain_loss': 0.678, 'disc_acc': 0.917, 'alpha': 0.02, 'feat_norm': 42.024} | peak: {'layer1': 9, 'layer2': 8, 'layer3': 5, 'layer4': 42, 'avgpool': 19}
+125 loss 0.768 {'cls_loss': 0.212, 'domain_loss': 0.556, 'disc_acc': 0.75, 'alpha': 0.101, 'feat_norm': 46.055} | peak: {'layer1': 10, 'layer2': 9, 'layer3': 8, 'layer4': 95, 'avgpool': 31}
+200 loss 0.761 {'cls_loss': 0.192, 'domain_loss': 0.569, 'disc_acc': 0.875, 'alpha': 0.162, 'feat_norm': 42.995} | peak: {'layer1': 10, 'layer2': 10, 'layer3': 7, 'layer4': 106, 'avgpool': 32}
+300 loss 0.656 {'cls_loss': 0.126, 'domain_loss': 0.53, 'disc_acc': 0.75, 'alpha': 0.241, 'feat_norm': 59.963} | peak: {'layer1': 10, 'layer2': 9, 'layer3': 10, 'layer4': 119, 'avgpool': 34}
+
+## dan λ=10, align.l2_normalize=true (median bandwidth still detached) — NOT sufficient
+25  loss 3.494 {'cls_loss': 1.413, 'mmd': 0.208, 'feat_norm': 85.986} | peak: {'layer1': 9, 'layer2': 8, 'layer3': 7, 'layer4': 42, 'avgpool': 17}
+125 loss 5.182 {'cls_loss': 2.266, 'mmd': 0.292, 'feat_norm': 663.218} | peak: {'layer1': 8, 'layer2': 7, 'layer3': 9, 'layer4': 269, 'avgpool': 161}
+225 loss 3.658 {'cls_loss': 2.808, 'mmd': 0.085, 'feat_norm': 1228.625} | peak: {'layer1': 9, 'layer2': 6, 'layer3': 8, 'layer4': 477, 'avgpool': 283}
+300 loss 4.129 {'cls_loss': 2.982, 'mmd': 0.115, 'feat_norm': 1222.734} | peak: {'layer1': 8, 'layer2': 6, 'layer3': 7, 'layer4': 476, 'avgpool': 288}
+
+## dan λ=10, align.l2_normalize=true + align.detach_mmd_median=false — adopted
+25  loss 2.814 {'cls_loss': 1.014, 'mmd': 0.18, 'feat_norm': 53.765} | peak: {'layer1': 9, 'layer2': 8, 'layer3': 7, 'layer4': 57, 'avgpool': 17}
+125 loss 2.160 {'cls_loss': 0.643, 'mmd': 0.152, 'feat_norm': 59.248} | peak: {'layer1': 9, 'layer2': 8, 'layer3': 11, 'layer4': 102, 'avgpool': 40}
+200 loss 1.788 {'cls_loss': 0.415, 'mmd': 0.137, 'feat_norm': 70.21} | peak: {'layer1': 10, 'layer2': 9, 'layer3': 9, 'layer4': 211, 'avgpool': 72}
+300 loss 2.771 {'cls_loss': 0.443, 'mmd': 0.233, 'feat_norm': 54.441} | peak: {'layer1': 10, 'layer2': 10, 'layer3': 9, 'layer4': 207, 'avgpool': 72}

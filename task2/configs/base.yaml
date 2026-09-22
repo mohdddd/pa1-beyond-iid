@@ -23,9 +23,11 @@ optim:
   weight_decay: 1.0e-4       # applied to all trainable parameters (plain AdamW)
   lr_schedule: constant      # manual specifies none
 align:
-  # Alignment-branch stabilisation (applies to DAN / DANN / CDAN only; Source-only is unaffected).
-  l2_normalize: false        # L2-normalise the feature copy fed to MMD / the discriminator
-  detach_mmd_median: true    # detach the median-heuristic bandwidth in MMD
+  # Alignment-branch stabilisation (DAN / DANN / CDAN and Task 3 DAN-DG; Source-only/ERM is
+  # mathematically unaffected — it has no alignment branch). Justification and evidence:
+  # task2/results/diagnostics/ (stability probes) and task2/README.md.
+  l2_normalize: true         # L2-normalise the feature COPY fed to MMD / the discriminator
+  detach_mmd_median: false   # differentiable median-heuristic bandwidth in MMD
 train:
   max_epochs: 30
   patience: 5                # stop after 5 epochs without improved selection metric

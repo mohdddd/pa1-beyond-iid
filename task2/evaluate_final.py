@@ -72,7 +72,7 @@ class Out:
 
 
 # ---------------------------------------------------------------- 1. lock
-def lock(out: Out, debug: bool) -> dict:
+def lock(out: Out, debug: bool, relock: bool = False) -> dict:
     ck_root = storage_dir("checkpoints", "task2")
     runs = {}
     for r in RUNS:
@@ -95,7 +95,11 @@ def lock(out: Out, debug: bool) -> dict:
     if path.exists() and not debug:
         old = load_json(path)
         if old["runs"] != lk["runs"]:
-            raise RuntimeError("lock.json exists with different checkpoints — investigate, do not overwrite")
+            if not relock:
+                raise RuntimeError("lock.json exists with different checkpoints — rerun with --relock "
+                                   "(the previous lock is archived) if the runs were legitimately retrained")
+            save_json(old, out.res / f"lock_previous_{old['git_commit'][:10]}.json")
+            save_json(lk, path)
     else:
         save_json(lk, path)
     return runs
@@ -298,6 +302,8 @@ def main():
     ap.add_argument("--stage", choices=["all", "analyze", "figures"], default="all")
     ap.add_argument("--confirm-final", action="store_true",
                     help="required for the extract stage: confirms all Task 2 decisions are fixed")
+    ap.add_argument("--relock", action="store_true",
+                    help="checkpoints changed since the previous lock (archives it and writes a new one)")
     ap.add_argument("--debug-limit", type=int, default=None, help="testing only: tiny subsets, temp outputs")
     a = ap.parse_args()
     debug = a.debug_limit is not None
@@ -305,7 +311,7 @@ def main():
     if a.stage == "all":
         if not a.confirm_final:
             raise SystemExit("Refusing to load Sketch labels without --confirm-final.")
-        runs = lock(out, debug)
+        runs = lock(out, debug, a.relock)
         extract(out, runs, a.debug_limit)
     if a.stage in ("all", "analyze"):
         res = analyze(out)
