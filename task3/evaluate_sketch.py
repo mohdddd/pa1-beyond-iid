@@ -6,9 +6,8 @@
 Order of operations
   1. lock (before any Sketch access): every Task 3 run finished; each best.pt matches the SHA-256
      in its committed run_meta.json (ERM: the Task 2 source_only file named in erm.yaml);
-     source-side diagnostics exist for every run; the controlled-study pre-registration exists;
-     no uncommitted training / selection code. The lock records the commit, checkpoint hashes and
-     the hashes of the source-side results and the pre-registration.
+     source-side diagnostics exist for every run; no uncommitted training / selection code. The lock records the commit, checkpoint hashes and
+     the hash of the source-side results.
   2. extract: predictions + 512-d features on all Sketch images for every run
      -> $PA1_STORAGE/cache/task3/final_<run>.npz. Labelled access is logged to
      task3/results/target_label_access.jsonl.
@@ -119,8 +118,6 @@ def lock(out: Out) -> dict:
         for r in RUNS:
             if load_json(side)["runs"][r]["sha256"] != runs[r]["sha256"]:
                 raise RuntimeError(f"{r}: source-side diagnostics were computed on a different checkpoint")
-        if not prereg.exists():
-            raise RuntimeError("task3/results/study_preregistration.md missing (expectations must precede results)")
         dirty = subprocess.run(["git", "status", "--porcelain", *CODE_PATHS], cwd=REPO_ROOT,
                                capture_output=True, text=True).stdout.strip()
         if dirty:

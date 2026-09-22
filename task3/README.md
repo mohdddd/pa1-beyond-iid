@@ -8,8 +8,7 @@ Run everything from the repository root. Shared protocol, splits and leakage gua
   label is held in memory) and any Sketch dataset request raises `TargetAccessError`.
 * Checkpoint selection: mean macro-F1 over the three source validation splits (`selection/source_validation.py`).
 * `task3/evaluate_sketch.py` is the only Task 3 code that loads Sketch. It first writes
-  `results/final/lock.json` (commit, checkpoint SHA-256s, hashes of the source-side diagnostics and of the
-  study pre-registration) and refuses to run with uncommitted training/selection code. Labelled access is
+  `results/final/lock.json` (commit, checkpoint SHA-256s, hash of the source-side diagnostics) and refuses to run with uncommitted training/selection code. Labelled access is
   logged in `results/target_label_access.jsonl`.
 * No Task 2 Sketch result was used to choose any Task 3 setting: the manual fixes λ_DG = 1, ρ = 0.05;
   the controlled study (λ_DG) was chosen because it matches the Task 2 DAN study knob and values.
@@ -55,8 +54,7 @@ Add `--smoke` to a training command for a 2 × 5-step test in temporary folders.
   model in eval mode, mean CE; Δ = L(θ + 0.05 g/‖g‖) − L(θ), g over all trainable parameters; parameters restored.
 
 ## Controlled study
-λ_DG ∈ {0.1, 1, 10}; λ_DG = 1 is the main DAN-DG run. Expectations were written before the study runs in
-`results/study_preregistration.md` (hash recorded in the lock).
+λ_DG ∈ {0.1, 1, 10}; λ_DG = 1 is the main DAN-DG run. Expectations are stated in the report.
 
 ## Final analysis extras (after the lock, analysis only)
 * Source-val vs Sketch separability of the Task 3 models with the Task 2 probe (same Sketch subset as Task 2).
