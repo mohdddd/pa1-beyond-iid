@@ -1,0 +1,17 @@
+method,type,sketch_id,true,erm_pred,method_pred
+dan_dg,lost,sketch/n02676566_330-5.png,guitar,guitar,person
+dan_dg,lost,sketch/n02676566_5489-4.png,guitar,guitar,person
+dan_dg,lost,sketch/n03467517_22871-2.png,guitar,guitar,person
+dan_dg,lost,sketch/n03467517_6423-3.png,guitar,guitar,person
+dan_dg,gained,sketch/12157.png,person,elephant,person
+dan_dg,gained,sketch/12170.png,person,elephant,person
+dan_dg,gained,sketch/12210.png,person,elephant,person
+dan_dg,gained,sketch/12220.png,person,elephant,person
+sam,lost,sketch/n02374451_12250-2.png,horse,horse,person
+sam,lost,sketch/n02374451_13132-3.png,horse,horse,person
+sam,lost,sketch/n02374451_8744-2.png,horse,horse,dog
+sam,lost,sketch/n02374451_9225-7.png,horse,horse,dog
+sam,gained,sketch/n02103406_3056-1.png,dog,person,dog
+sam,gained,sketch/n02103406_3326-6.png,dog,elephant,dog
+sam,gained,sketch/n02109525_6693-1.png,dog,person,dog
+sam,gained,sketch/n02109525_8457-2.png,dog,person,dog

@@ -1,0 +1,4 @@
+lambda_dg,run,best_epoch,train_mmd2_best_epoch,val_mean_macro_f1,val_worst_macro_f1,src_domain_separability,sharpness_delta,sketch_acc,sketch_f1,sketch_delta_acc_vs_erm,source_vs_sketch_separability,task2_dan_sketch_acc,task2_dan_val_mean_macro_f1,task2_dan_source_vs_sketch_separability,task2_dan_three_way_source_separability
+0.1,dan_dg_l0p1,10,0.4817,0.9553,0.9373,0.7708,0.2529,0.7223,0.7096,0.1336,0.9959,0.7238,0.954,0.919,0.8505
+1.0,dan_dg,1,0.5747,0.0507,0.0421,0.4784,0.0308,0.0407,0.0112,-0.548,0.636,0.594,0.9474,0.8668,0.804
+10.0,dan_dg_l10,2,0.52,0.0507,0.0421,0.6611,0.0206,0.0407,0.0112,-0.548,0.9245,0.0407,0.0507,0.8407,0.6512
