@@ -8,6 +8,12 @@ It returns the total loss and a dict of scalar logs.
 Methods may own extra trainable modules (e.g. a domain discriminator); they are
 exposed via ``self.modules_`` so the trainer optimises and checkpoints them
 with the same AdamW settings as the network.
+
+``update`` performs ONE optimisation step. The default (forward -> loss ->
+backward -> optimizer step) is used by every Task 2 method and by Task 3
+DAN-DG; Task 3 SAM overrides it with its two-pass step. The default is
+bit-identical to the step that was inlined in task2/train.py when Task 2 was run
+(verified on source_only and dan; see task3/README.md).
 """
 import torch
 import torch.nn as nn
@@ -26,10 +32,9 @@ class Method:
         self.cfg = cfg
         self.modules_ = nn.ModuleDict()      # extra trainable modules (may stay empty)
         al = cfg.get("align", {})
-        # Stabilisation switches (see task2/README.md "Alignment-branch stabilisation").
-        # l2_normalize: the feature COPY used by the alignment loss / discriminator is projected
-        # onto the unit sphere; the classifier still sees the raw 512-d feature, so Source-only
-        # ERM is bit-identical either way.
+        # Alignment-branch stabilisation (see task2/README.md). The classifier always sees the
+        # raw feature, so methods without an alignment branch (Source-only / Task 3 ERM) are
+        # mathematically unaffected by these switches.
         self.l2_align = bool(al.get("l2_normalize", False))
         self.detach_mmd_median = bool(al.get("detach_mmd_median", True))
 
@@ -51,3 +56,15 @@ class Method:
 
     def loss(self, feats, logits, y, dom, progress: float):
         raise NotImplementedError
+
+    def update(self, net, x, y, dom, progress: float, opt, scaler, amp: bool, step: int):
+        """One optimisation step; returns (loss at the current parameters, logs)."""
+        with torch.autocast(device_type=x.device.type, dtype=torch.float16, enabled=amp):
+            feats, logits = net(x)
+        loss, logs = self.loss(feats.float(), logits.float(), y, dom, progress)
+        if not torch.isfinite(loss):
+            raise FloatingPointError(f"non-finite loss at step {step}")
+        opt.zero_grad(set_to_none=True)
+        scaler.scale(loss).backward()
+        scaler.step(opt); scaler.update()
+        return loss, logs
