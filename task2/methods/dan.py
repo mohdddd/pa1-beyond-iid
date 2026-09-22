@@ -12,12 +12,14 @@ import torch
 from task2.methods.base import Method
 
 
-def mmd2(x: torch.Tensor, y: torch.Tensor, mults=(0.5, 1.0, 2.0)) -> torch.Tensor:
+def mmd2(x: torch.Tensor, y: torch.Tensor, mults=(0.5, 1.0, 2.0),
+         detach_median: bool = True) -> torch.Tensor:
     z = torch.cat([x, y]).float()
     d2 = torch.cdist(z, z).pow(2)
     n = z.shape[0]
     off = ~torch.eye(n, dtype=torch.bool, device=z.device)
-    med = d2[off].median().detach().clamp_min(1e-8)
+    med = d2[off].median()
+    med = (med.detach() if detach_median else med).clamp_min(1e-8)
     k = sum(torch.exp(-d2 / (m * med)) for m in mults)
     nx = x.shape[0]
     kxx, kyy, kxy = k[:nx, :nx], k[nx:, nx:], k[:nx, nx:]
@@ -36,5 +38,7 @@ class DAN(Method):
     def loss(self, feats, logits, y, dom, progress):
         src, tgt = self.split(dom)
         cls = self.source_ce(logits, y, src)
-        mmd = mmd2(feats[src], feats[tgt], self.mults)
-        return cls + self.lam * mmd, {"cls_loss": cls.item(), "mmd": mmd.item()}
+        fa = self.align_feats(feats)
+        mmd = mmd2(fa[src], fa[tgt], self.mults, detach_median=self.detach_mmd_median)
+        return cls + self.lam * mmd, {"cls_loss": cls.item(), "mmd": mmd.item(),
+                                      "feat_norm": feats.norm(dim=1).mean().item()}

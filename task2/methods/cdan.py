@@ -18,4 +18,5 @@ class CDAN(DANN):
 
     def disc_input(self, feats, logits):
         p = logits.softmax(1)
-        return torch.bmm(p.unsqueeze(2), feats.unsqueeze(1)).flatten(1)   # (B, C*D)
+        f = self.align_feats(feats)
+        return torch.bmm(p.unsqueeze(2), f.unsqueeze(1)).flatten(1)       # (B, C*D)

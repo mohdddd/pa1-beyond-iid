@@ -27,7 +27,7 @@ class DANN(Method):
         return feat_dim
 
     def disc_input(self, feats, logits):
-        return feats
+        return self.align_feats(feats)
 
     def loss(self, feats, logits, y, dom, progress):
         src, tgt = self.split(dom)
@@ -38,4 +38,5 @@ class DANN(Method):
         dl = F.cross_entropy(d_logits, d_true)
         d_acc = (d_logits.argmax(1) == d_true).float().mean()
         return cls + self.w * dl, {"cls_loss": cls.item(), "domain_loss": dl.item(),
-                                   "disc_acc": d_acc.item(), "alpha": alpha}
+                                   "disc_acc": d_acc.item(), "alpha": alpha,
+                                   "feat_norm": feats.norm(dim=1).mean().item()}

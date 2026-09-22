@@ -5,8 +5,8 @@ Runs the first N training steps of a method exactly as task2/train.py does
 autocast, printing losses and the peak |activation| of each ResNet stage every
 25 steps. Used to diagnose the non-finite DANN/CDAN losses under fp16.
 
-    PYTHONPATH=. python -m task2.evaluation.stability_probe dann amp 300
     PYTHONPATH=. python -m task2.evaluation.stability_probe dann fp32 300
+    PYTHONPATH=. python -m task2.evaluation.stability_probe dann fp32 300 align.l2_normalize=true
 """
 import math
 import sys
@@ -22,8 +22,9 @@ from task2.models.classifier_head import Net
 from task2.train import load_config
 
 
-def main(name: str, amp: bool, steps: int):
-    cfg = load_config(f"task2/configs/{name}.yaml")
+def main(name: str, amp: bool, steps: int, overrides=()):
+    cfg = load_config(f"task2/configs/{name}.yaml", overrides)
+    print(f"[probe] {name} amp={amp} steps={steps} overrides={list(overrides)}", flush=True)
     dev = torch.device("cuda")
     set_seed(6304)
     net = Net().to(dev)
@@ -59,4 +60,4 @@ def main(name: str, amp: bool, steps: int):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2] == "amp", int(sys.argv[3]))
+    main(sys.argv[1], sys.argv[2] == "amp", int(sys.argv[3]), sys.argv[4:])
