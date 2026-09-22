@@ -1,0 +1,63 @@
+{
+  "timestamp": "2026-09-22T18:04:32",
+  "git_commit": "a2b8ebc3e6b060b748388aeabcd8d08a5ebdd716",
+  "python": "3.13.15",
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "gpu": "Tesla T4",
+  "config": {
+    "seed": 6304,
+    "data": {
+      "splits": "shared/splits/pacs_sketch_seed6304.json",
+      "sources": [
+        "photo",
+        "art_painting",
+        "cartoon"
+      ],
+      "target": "sketch",
+      "per_source_batch": 8,
+      "target_batch": 24,
+      "steps_per_epoch": 203,
+      "num_workers": 2,
+      "resize": 256,
+      "crop": 224
+    },
+    "model": {
+      "arch": "resnet18",
+      "weights": "IMAGENET1K_V1",
+      "feat_dim": 512,
+      "num_classes": 7,
+      "freeze_bn_running_stats": true
+    },
+    "optim": {
+      "name": "adamw",
+      "lr": 0.0001,
+      "weight_decay": 0.0001,
+      "lr_schedule": "constant"
+    },
+    "train": {
+      "max_epochs": 30,
+      "patience": 5,
+      "selection_metric": "val_mean_macro_f1",
+      "amp": false,
+      "log_every": 10
+    },
+    "run_name": "sam",
+    "method": {
+      "name": "sam",
+      "rho": 0.05
+    }
+  },
+  "run_name": "sam",
+  "method": "sam",
+  "best_epoch": 8,
+  "best_val_mean_macro_f1": 0.9556274387196325,
+  "epochs_run": 13,
+  "stop_reason": "early_stopping",
+  "global_steps": 2639,
+  "train_time_s": 506.8,
+  "best_ckpt": "/content/drive/MyDrive/PA1_storage/checkpoints/task3/sam/best.pt",
+  "best_sha256": "8c709dd9b38775e41661fb69436c2174efdff0cda9d7d2148f2426911902b51f",
+  "bn_running_stats_equal_imagenet": true,
+  "bn_modules_frozen": 20
+}
