@@ -1,0 +1,64 @@
+{
+  "timestamp": "2026-09-22T17:50:18",
+  "git_commit": "4c9fba12dfb83d1ec7bb86eac84078dd928be3b2",
+  "python": "3.13.15",
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "gpu": "Tesla T4",
+  "config": {
+    "seed": 6304,
+    "data": {
+      "splits": "shared/splits/pacs_sketch_seed6304.json",
+      "sources": [
+        "photo",
+        "art_painting",
+        "cartoon"
+      ],
+      "target": "sketch",
+      "per_source_batch": 8,
+      "target_batch": 24,
+      "steps_per_epoch": 203,
+      "num_workers": 2,
+      "resize": 256,
+      "crop": 224
+    },
+    "model": {
+      "arch": "resnet18",
+      "weights": "IMAGENET1K_V1",
+      "feat_dim": 512,
+      "num_classes": 7,
+      "freeze_bn_running_stats": true
+    },
+    "optim": {
+      "name": "adamw",
+      "lr": 0.0001,
+      "weight_decay": 0.0001,
+      "lr_schedule": "constant"
+    },
+    "train": {
+      "max_epochs": 30,
+      "patience": 5,
+      "selection_metric": "val_mean_macro_f1",
+      "amp": false,
+      "log_every": 10
+    },
+    "run_name": "erm",
+    "reuse": {
+      "task": "task2",
+      "run": "source_only",
+      "sha256": "bb886eb3adde2c4f0f9236370b361a246a59a3a03189b09120fa169407cded1d"
+    },
+    "method": {
+      "name": "erm"
+    }
+  },
+  "run_name": "erm",
+  "method": "erm",
+  "reused_from": "task2/results/source_only",
+  "best_ckpt": "/content/drive/MyDrive/PA1_storage/checkpoints/task2/source_only/best.pt",
+  "best_sha256": "bb886eb3adde2c4f0f9236370b361a246a59a3a03189b09120fa169407cded1d",
+  "best_epoch": 3,
+  "best_val_mean_macro_f1": 0.9369248142822663,
+  "task2_recorded_val_mean_macro_f1": 0.9369248142822663,
+  "abs_diff_vs_task2": 0.0
+}
