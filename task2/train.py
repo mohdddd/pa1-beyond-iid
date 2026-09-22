@@ -1,4 +1,4 @@
-"""Single training loop for every Task 2 method (and reused by Task 3).
+"""Single training loop for every Task 2 method and every trained Task 3 method.
 
     python -m task2.train --config task2/configs/source_only.yaml
     python -m task2.train --config task2/configs/source_only.yaml --smoke   # quick test
@@ -8,6 +8,8 @@ frozen BN running statistics, AdamW(lr 1e-4, wd 1e-4), <= 30 source epochs,
 early stopping after 5 epochs without improved mean source-val macro-F1,
 seed 6304, domain-balanced batches (8 per source [+ 24 unlabeled target]).
 Only SOURCE validation data is evaluated here — the target is never scored.
+The optimisation step itself is ``method.update`` (default in methods/base.py;
+Task 3 SAM overrides it with its two-pass step).
 
 Storage
   PA1_STORAGE/checkpoints/task2/<run>/  last.pt (resume; deleted when finished),
@@ -100,7 +102,9 @@ def bn_stats_match_imagenet(net: Net) -> bool:
 
 # ---------------------------------------------------------------- main
 def run(cfg: dict, smoke: bool = False, fresh: bool = False, keep_last: bool = False,
-        task: str = "task2") -> dict:
+        task: str = "task2", build=build_method) -> dict:
+    """Train one run. ``task`` selects checkpoint/results folders; ``build`` is the
+    method factory (Task 2 registry by default, Task 3 passes its own)."""
     name = cfg["run_name"]
     if smoke:
         name = f"smoke_{name}"
@@ -129,7 +133,7 @@ def run(cfg: dict, smoke: bool = False, fresh: bool = False, keep_last: bool = F
 
     # identical initialisation across methods: net is built right after seeding
     net = Net(cfg["model"]["num_classes"]).to(dev)
-    method = build_method(cfg, cfg["model"]["feat_dim"], cfg["model"]["num_classes"])
+    method = build(cfg, cfg["model"]["feat_dim"], cfg["model"]["num_classes"])
     method.modules_.to(dev)
     container = nn.ModuleDict({"net": net, "method": method.modules_})
     opt = torch.optim.AdamW(container.parameters(), lr=cfg["optim"]["lr"],
@@ -174,14 +178,7 @@ def run(cfg: dict, smoke: bool = False, fresh: bool = False, keep_last: bool = F
             x, y, dom = (x.to(dev, non_blocking=True), y.to(dev, non_blocking=True),
                          dom.to(dev, non_blocking=True))
             progress = st["global_step"] / total_steps
-            with torch.autocast(device_type=dev.type, dtype=torch.float16, enabled=amp):
-                feats, logits = net(x)
-            loss, logs = method.loss(feats.float(), logits.float(), y, dom, progress)
-            if not torch.isfinite(loss):
-                raise FloatingPointError(f"non-finite loss at step {st['global_step']}")
-            opt.zero_grad(set_to_none=True)
-            scaler.scale(loss).backward()
-            scaler.step(opt); scaler.update()
+            loss, logs = method.update(net, x, y, dom, progress, opt, scaler, amp, st["global_step"])
             st["global_step"] += 1; cnt += 1
             logs["loss"] = loss.item()
             for k, v in logs.items():

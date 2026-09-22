@@ -1,0 +1,11 @@
+# Task 3 Step 1: ERM baseline = the Task 2 Source-only checkpoint, reused UNCHANGED.
+# It is never retrained here: `python -m task3.train --config task3/configs/erm.yaml`
+# only verifies the file (SHA-256) and re-evaluates it on the source validation splits.
+# Shared settings come from task2/configs/base.yaml (identical protocol).
+run_name: erm
+reuse:
+  task: task2
+  run: source_only
+  sha256: bb886eb3adde2c4f0f9236370b361a246a59a3a03189b09120fa169407cded1d
+method:
+  name: erm

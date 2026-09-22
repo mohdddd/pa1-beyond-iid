@@ -1,0 +1,8 @@
+# Task 3 Step 3: SAM — non-adaptive, rho = 0.05, AdamW base optimiser (same lr / wd as ERM).
+# eps = rho * g / ||g||_2 over ALL trainable parameters (backbone incl. BN gamma/beta, head);
+# two forward/backward passes per batch, frozen BN running statistics in both.
+# Shared settings come from task2/configs/base.yaml (identical protocol, 8+8+8 batches).
+run_name: sam
+method:
+  name: sam
+  rho: 0.05

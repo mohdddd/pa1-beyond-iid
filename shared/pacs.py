@@ -19,7 +19,9 @@ Design choices
       passes ``purpose="final_evaluation"``; every labelled access is appended
       to ``<task>/results/target_label_access.jsonl`` (audit trail).
     - If the environment variable ``PA1_FORBID_TARGET=1`` is set (Task 3
-      training / selection scripts set it), *any* sketch access raises.
+      training / selection / diagnostic scripts set it), *any* sketch access
+      raises, and ``PACSStore`` drops every sketch row while reading the parquet,
+      so no sketch image or label is ever held in memory by those processes.
 """
 from __future__ import annotations
 
@@ -69,7 +71,8 @@ def assert_target_allowed(domain: str) -> None:
 
 def log_target_label_access(task: str, purpose: str, note: str = "") -> None:
     from common.paths import REPO_ROOT
-    path = Path(REPO_ROOT) / task / "results" / "target_label_access.jsonl"
+    root = Path(os.environ.get("PA1_TARGET_LOG_ROOT", REPO_ROOT))   # override only for sandbox tests
+    path = root / task / "results" / "target_label_access.jsonl"
     path.parent.mkdir(parents=True, exist_ok=True)
     rec = {"time": time.strftime("%Y-%m-%d %H:%M:%S"), "purpose": purpose, "note": note}
     with open(path, "a") as f:
@@ -129,8 +132,12 @@ class PACSStore:
     _instance: "PACSStore | None" = None
 
     def __init__(self, parquet_path: Path):
+        import pyarrow.compute as pc
         import pyarrow.parquet as pq
         table = pq.read_table(parquet_path)
+        self.target_excluded = os.environ.get("PA1_FORBID_TARGET") == "1"
+        if self.target_excluded:          # Task 3: never materialise sketch images/labels
+            table = table.filter(pc.not_equal(table.column("domain"), TARGET_DOMAIN))
         images = table.column("image").to_pylist()
         domains = table.column("domain").to_pylist()
         labels = table.column("label").to_pylist()
@@ -146,7 +153,10 @@ class PACSStore:
             self.label[uid] = int(y)
             self.domain[uid] = d
         counts = {d: sum(1 for v in self.domain.values() if v == d) for d in DOMAINS}
-        if counts != EXPECTED_COUNTS:
+        expected = dict(EXPECTED_COUNTS)
+        if self.target_excluded:
+            expected[TARGET_DOMAIN] = 0
+        if counts != expected:
             raise RuntimeError(f"unexpected PACS domain counts {counts}")
 
     @classmethod
@@ -176,6 +186,8 @@ class PACSDataset(Dataset):
     def __init__(self, ids: list[str], transform=None, labeled: bool = True,
                  purpose: str = "", task: str = ""):
         store = PACSStore.get()
+        for d in {u.split("/", 1)[0] for u in ids}:   # before lookup: sketch rows may be absent
+            assert_target_allowed(d)
         domains = {store.domain[u] for u in ids}
         for d in domains:
             assert_target_allowed(d)

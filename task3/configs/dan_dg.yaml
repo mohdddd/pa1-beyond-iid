@@ -1,0 +1,8 @@
+# Task 3 Step 2: DAN-DG — ERM + lambda_dg/3 * sum over the 3 source pairs of MMD^2 (512-d feature).
+# Same mmd2 implementation/kernels as Task 2 DAN; bandwidths from each pair's 16 features (8+8).
+# Shared settings come from task2/configs/base.yaml (identical protocol, 8+8+8 batches, no target).
+run_name: dan_dg
+method:
+  name: dan_dg
+  lambda_dg: 1.0
+  kernel_mults: [0.5, 1.0, 2.0]   # x median pairwise squared distance of the pair's batch

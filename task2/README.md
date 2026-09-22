@@ -30,6 +30,8 @@ python -m task2.train --config task2/configs/cdan.yaml
   p = step / (30 x 203) (maximum budget, unaffected by early stopping); loss = CE(source) + 1 x CE_domain(source+target).
 * CDAN: same as DANN but the discriminator sees vec(f ⊗ softmax(C(f))) (3584-d); no entropy
   conditioning, nothing detached. Discriminators are trained by the same AdamW optimiser.
+* The optimisation step is `Method.update` (`methods/base.py`), added for Task 3 SAM; the default is
+  verified bit-identical to the step used for all Task 2 runs (see `task3/README.md`).
 * ResNet-18 `IMAGENET1K_V1`, fc -> Identity (512-d feature), 7-class linear head, full fine-tuning.
 * BatchNorm running mean/var frozen at ImageNet values (BN modules in eval mode after
   `model.train()`); gamma/beta trainable. Verified after training (`bn_running_stats_equal_imagenet`).
