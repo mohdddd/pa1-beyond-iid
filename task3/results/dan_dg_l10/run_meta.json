@@ -1,0 +1,72 @@
+{
+  "timestamp": "2026-09-23T11:35:52",
+  "git_commit": "fbc43e6f90e459ff0efbacd6e35dd70f111e09a2",
+  "python": "3.13.15",
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "gpu": "Tesla T4",
+  "config": {
+    "seed": 6304,
+    "data": {
+      "splits": "shared/splits/pacs_sketch_seed6304.json",
+      "sources": [
+        "photo",
+        "art_painting",
+        "cartoon"
+      ],
+      "target": "sketch",
+      "per_source_batch": 8,
+      "target_batch": 24,
+      "steps_per_epoch": 203,
+      "num_workers": 2,
+      "resize": 256,
+      "crop": 224
+    },
+    "model": {
+      "arch": "resnet18",
+      "weights": "IMAGENET1K_V1",
+      "feat_dim": 512,
+      "num_classes": 7,
+      "freeze_bn_running_stats": true
+    },
+    "optim": {
+      "name": "adamw",
+      "lr": 0.0001,
+      "weight_decay": 0.0001,
+      "lr_schedule": "constant"
+    },
+    "align": {
+      "l2_normalize": true,
+      "detach_mmd_median": false
+    },
+    "train": {
+      "max_epochs": 30,
+      "patience": 5,
+      "selection_metric": "val_mean_macro_f1",
+      "amp": false,
+      "log_every": 10
+    },
+    "run_name": "dan_dg_l10",
+    "method": {
+      "name": "dan_dg",
+      "lambda_dg": 10,
+      "kernel_mults": [
+        0.5,
+        1.0,
+        2.0
+      ]
+    }
+  },
+  "run_name": "dan_dg_l10",
+  "method": "dan_dg",
+  "best_epoch": 1,
+  "best_val_mean_macro_f1": 0.3961138647683413,
+  "epochs_run": 6,
+  "stop_reason": "early_stopping",
+  "global_steps": 1218,
+  "train_time_s": 166.0,
+  "best_ckpt": "/content/drive/MyDrive/PA1_storage/checkpoints/task3/dan_dg_l10/best.pt",
+  "best_sha256": "cea45527431677f65cdf13b2b3811a0189363139c956601f710d478a79a21ce4",
+  "bn_running_stats_equal_imagenet": true,
+  "bn_modules_frozen": 20
+}
