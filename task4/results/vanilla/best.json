@@ -1,0 +1,7 @@
+{
+  "run": "vanilla",
+  "best_epoch": 98,
+  "best_val_acc": 0.957,
+  "best_pt_sha256": "51b72b2568454b439096fedc7d54a030ac39de8fa3d427a8157dd2e9a5d5f197",
+  "epochs": 100
+}

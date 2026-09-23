@@ -1,0 +1,7 @@
+{
+  "run": "gcsc",
+  "best_epoch": 99,
+  "best_val_acc": 0.959,
+  "best_pt_sha256": "db725e95a429ae58bed2b11ac0fd790bc819dae65e85981d120a4d8a8a2250d3",
+  "epochs": 100
+}
