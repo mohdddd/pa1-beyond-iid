@@ -102,7 +102,7 @@ def run(cfg, smoke=False, fresh=False):
     x_val, y_val = to_eval_tensor(xva), torch.from_numpy(yva)
 
     # ---- model + method (model built right after seeding -> identical init across runs)
-    model = CifarResNet18(cfg["model"]["num_classes"])
+    model = CifarResNet18(cfg["model"]["num_classes"], cfg["model"].get("num_dummy", 0))
     method = build_method(cfg)
     model = method.setup(model, device).to(device)
     if cl:
@@ -119,7 +119,8 @@ def run(cfg, smoke=False, fresh=False):
         start, best = st["epoch"] + 1, st["best_metric"]
         print(f"resumed after epoch {st['epoch']} (best val acc {best:.4f})")
     logger = CSVLogger(res_dir / "train_epochs.csv", resume=start > 1)
-    save_run_metadata(res_dir / "run_meta.json", cfg, device=str(device), amp=amp, smoke=smoke)
+    save_run_metadata(res_dir / "run_meta.json", cfg, device=str(device), amp=amp, smoke=smoke,
+                      **getattr(method, "meta", {}))
 
     bs, nw = cfg["data"]["batch_size"], (0 if smoke else cfg["data"]["num_workers"])
     for epoch in range(start, epochs + 1):

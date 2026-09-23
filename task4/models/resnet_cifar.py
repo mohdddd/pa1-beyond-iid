@@ -8,11 +8,13 @@ from torchvision.models.resnet import BasicBlock, ResNet
 class CifarResNet18(ResNet):
     feat_dim = 512
 
-    def __init__(self, num_classes: int = 10):
+    def __init__(self, num_classes: int = 10, num_dummy: int = 0):
         super().__init__(BasicBlock, [2, 2, 2, 2], num_classes=num_classes)
         self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
         nn.init.kaiming_normal_(self.conv1.weight, mode="fan_out", nonlinearity="relu")  # torchvision's conv init
         self.maxpool = nn.Identity()
+        # PROSER dummy classifiers (classifier placeholders); absent for Vanilla / GCSC
+        self.dummy = nn.Linear(self.feat_dim, num_dummy) if num_dummy else None
 
     def pre(self, x):                       # input -> end of layer2
         x = self.maxpool(self.relu(self.bn1(self.conv1(x))))

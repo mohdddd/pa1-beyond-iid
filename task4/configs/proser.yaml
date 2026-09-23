@@ -1,0 +1,16 @@
+# PROSER (manual §4 step 4): fine-tune the selected Vanilla checkpoint with 5 dummy classifiers.
+# Augmentation, batch size, momentum, weight decay, cosine schedule, seed and selection rule inherited from vanilla.yaml.
+inherit: vanilla.yaml
+run_name: proser
+method: proser
+model:
+  num_dummy: 5
+optim:
+  lr: 1.0e-3
+train:
+  epochs: 50
+proser:
+  init_run: vanilla          # $PA1_STORAGE/checkpoints/task4/vanilla/best.pt (SHA-256 recorded in run_meta.json)
+  beta: 1.0                  # classifier-placeholder loss weight
+  gamma: 0.1                 # data-placeholder loss weight
+  mixup_alpha: 2.0           # lambda ~ Beta(2, 2), one draw per mixed pair
