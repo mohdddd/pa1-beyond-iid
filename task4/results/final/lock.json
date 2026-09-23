@@ -1,0 +1,41 @@
+{
+  "time": "2026-09-23T20:29:47",
+  "git_commit": "fd512ec1b692d04f4950069e621522bd3302068f",
+  "checkpoints": {
+    "vanilla": "2d2db26c38bc10ccfd8825e3d9ad7aa466f0375438942d77fc3643f7d9a423b8",
+    "gcsc": "4950f08ff9ce95d4579e82f524869916c068b96f4bf56e2d713256fba667566c",
+    "proser": "81be59a17abb7b6c43256314feba78c610cff235c9cccf4fd5de42d9d5545592",
+    "proser_cleanbn": "db2af69c52af9e4a590bca43256c92cf579020d694a8724209dcf696d90f2fd9"
+  },
+  "proser_main": "proser_cleanbn",
+  "scores": [
+    "msp",
+    "mls",
+    "energy",
+    "mahalanobis(shared diag cov + 1e-6, unaugmented train feats)",
+    "proser_placeholder(T=1024, p_dummy - max p_known)"
+  ],
+  "threshold": "95th percentile of CIFAR-10 val unknownness; accept iff u <= tau",
+  "unknowns": {
+    "near": [
+      "bus",
+      "pickup_truck",
+      "motorcycle",
+      "tractor",
+      "wolf",
+      "fox",
+      "leopard",
+      "camel"
+    ],
+    "far": [
+      "bottle",
+      "bowl",
+      "chair",
+      "clock",
+      "keyboard",
+      "mushroom",
+      "sunflower",
+      "wardrobe"
+    ]
+  }
+}
