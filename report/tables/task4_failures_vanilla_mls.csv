@@ -1,0 +1,17 @@
+group,unknown_class,predicted,score,threshold,hf_test_index
+near,pickup_truck,automobile,-11.2534,-5.9793,7658
+near,bus,truck,-11.1985,-5.9793,5201
+near,tractor,truck,-10.9308,-5.9793,4404
+near,camel,horse,-10.7293,-5.9793,9110
+near,fox,cat,-10.7238,-5.9793,8715
+near,wolf,dog,-10.6551,-5.9793,720
+near,motorcycle,automobile,-10.2943,-5.9793,5572
+near,leopard,frog,-10.2663,-5.9793,5698
+far,bottle,cat,-11.9407,-5.9793,3888
+far,bowl,cat,-10.699,-5.9793,318
+far,sunflower,bird,-10.6644,-5.9793,8475
+far,wardrobe,truck,-10.5696,-5.9793,3853
+far,chair,cat,-10.0814,-5.9793,7982
+far,keyboard,truck,-10.0501,-5.9793,3247
+far,clock,truck,-9.9973,-5.9793,4704
+far,mushroom,bird,-9.8983,-5.9793,6558
