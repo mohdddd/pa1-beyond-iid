@@ -1,0 +1,7 @@
+{
+  "run": "proser",
+  "best_epoch": 1,
+  "best_val_acc": 0.9538,
+  "best_pt_sha256": "539a02685e7b881a7c3b9cf9c702f15464957760f294a2a71cfeb2d55bb227ef",
+  "epochs": 50
+}
