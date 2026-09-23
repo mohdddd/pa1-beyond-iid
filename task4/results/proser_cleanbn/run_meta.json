@@ -1,0 +1,49 @@
+{
+  "timestamp": "2026-09-23T16:48:02",
+  "git_commit": "b359e59c735882a52d62912b4916a62fd5e43276",
+  "python": "3.12.13",
+  "torch": "2.10.0+cu128",
+  "cuda": "12.8",
+  "gpu": "Tesla T4",
+  "config": {
+    "run_name": "proser_cleanbn",
+    "method": "proser",
+    "seed": 6304,
+    "data": {
+      "splits": "task4/data/splits/cifar10_seed6304.json",
+      "batch_size": 128,
+      "num_workers": 2,
+      "randaugment": null
+    },
+    "model": {
+      "num_classes": 10,
+      "num_dummy": 5
+    },
+    "optim": {
+      "lr": 0.001,
+      "momentum": 0.9,
+      "weight_decay": 0.0005,
+      "schedule": "cosine"
+    },
+    "train": {
+      "epochs": 50,
+      "amp": true,
+      "channels_last": true,
+      "eval_batch": 1000
+    },
+    "proser": {
+      "init_run": "vanilla",
+      "beta": 1.0,
+      "gamma": 0.1,
+      "mixup_alpha": 2.0,
+      "mixed_bn_stats": "frozen"
+    }
+  },
+  "device": "cuda",
+  "amp": true,
+  "smoke": false,
+  "init_checkpoint": "/kaggle/working/PA1_storage/checkpoints/task4/vanilla/best.pt",
+  "init_sha256": "51b72b2568454b439096fedc7d54a030ac39de8fa3d427a8157dd2e9a5d5f197",
+  "init_epoch": 98,
+  "init_val_acc": 0.957
+}

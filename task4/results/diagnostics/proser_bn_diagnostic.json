@@ -1,0 +1,37 @@
+[
+  {
+    "run": "vanilla",
+    "file": "best.pt",
+    "epoch": 98,
+    "val_acc_stored_bn": 0.957,
+    "val_acc_reestimated_bn": 0.9372
+  },
+  {
+    "run": "proser",
+    "file": "best.pt",
+    "epoch": 1,
+    "val_acc_stored_bn": 0.954,
+    "val_acc_reestimated_bn": 0.9332
+  },
+  {
+    "run": "proser",
+    "file": "last.pt",
+    "epoch": 50,
+    "val_acc_stored_bn": 0.852,
+    "val_acc_reestimated_bn": 0.9416
+  },
+  {
+    "run": "proser_cleanbn",
+    "file": "best.pt",
+    "epoch": 40,
+    "val_acc_stored_bn": 0.9584,
+    "val_acc_reestimated_bn": 0.9396
+  },
+  {
+    "run": "proser_cleanbn",
+    "file": "last.pt",
+    "epoch": 50,
+    "val_acc_stored_bn": 0.958,
+    "val_acc_reestimated_bn": 0.9392
+  }
+]

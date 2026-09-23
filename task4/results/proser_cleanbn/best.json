@@ -1,0 +1,7 @@
+{
+  "run": "proser_cleanbn",
+  "best_epoch": 40,
+  "best_val_acc": 0.9584,
+  "best_pt_sha256": "feceecb647749b39bc69ee5290c28f80b46cea117418b6bef73ce7890c55494c",
+  "epochs": 50
+}
