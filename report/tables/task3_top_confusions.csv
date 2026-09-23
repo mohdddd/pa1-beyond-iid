@@ -6,13 +6,13 @@ erm,guitar,0.9178,"person (46, 0.08)","elephant (2, 0.00)"
 erm,horse,0.6924,"person (133, 0.16)","elephant (73, 0.09)"
 erm,house,0.675,"person (21, 0.26)","elephant (3, 0.04)"
 erm,person,0.9562,"elephant (7, 0.04)",
-dan_dg,dog,0.0,"person (772, 1.00)",
-dan_dg,elephant,0.0,"person (740, 1.00)",
-dan_dg,giraffe,0.0,"person (753, 1.00)",
-dan_dg,guitar,0.0,"person (608, 1.00)",
-dan_dg,horse,0.0,"person (816, 1.00)",
-dan_dg,house,0.0,"person (80, 1.00)",
-dan_dg,person,1.0,,
+dan_dg,dog,0.2837,"horse (257, 0.33)","elephant (137, 0.18)"
+dan_dg,elephant,0.8095,"horse (66, 0.09)","dog (44, 0.06)"
+dan_dg,giraffe,0.5936,"horse (162, 0.22)","dog (51, 0.07)"
+dan_dg,guitar,0.949,"elephant (10, 0.02)","person (10, 0.02)"
+dan_dg,horse,0.8444,"elephant (52, 0.06)","giraffe (33, 0.04)"
+dan_dg,house,0.9375,"elephant (2, 0.03)","guitar (2, 0.03)"
+dan_dg,person,0.5938,"elephant (40, 0.25)","giraffe (17, 0.11)"
 sam,dog,0.6205,"person (136, 0.18)","elephant (88, 0.11)"
 sam,elephant,0.7284,"dog (103, 0.14)","person (85, 0.11)"
 sam,giraffe,0.5206,"person (166, 0.22)","dog (127, 0.17)"

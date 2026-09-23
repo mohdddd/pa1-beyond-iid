@@ -1,0 +1,28 @@
+{
+  "git_commit": "5839bcfd33b1e053348818b6c5eb9bd4de148407",
+  "runs": {
+    "erm": {
+      "sha256": "bb886eb3adde2c4f0f9236370b361a246a59a3a03189b09120fa169407cded1d",
+      "best_epoch": 3
+    },
+    "dan_dg": {
+      "sha256": "74f9b0ec8346065dd68372f5c76b7ee450e8981825739b61cb268a330ceea442",
+      "best_epoch": 3
+    },
+    "sam": {
+      "sha256": "8c709dd9b38775e41661fb69436c2174efdff0cda9d7d2148f2426911902b51f",
+      "best_epoch": 8
+    },
+    "dan_dg_l0p1": {
+      "sha256": "e423107c412067ff3a35998eaec3908c7a3bd9fdec4d7f4e4f5c54b2ab25f056",
+      "best_epoch": 3
+    },
+    "dan_dg_l10": {
+      "sha256": "cea45527431677f65cdf13b2b3811a0189363139c956601f710d478a79a21ce4",
+      "best_epoch": 1
+    }
+  },
+  "source_side_sha256": "a1c9a009c48367d87c7a9bda67f97092facbf722c7a511719f6ac2fcaeeb7d79",
+  "preregistration_sha256": null,
+  "note": "All Task 3 checkpoints, settings and source-side diagnostics fixed before Sketch was loaded."
+}
