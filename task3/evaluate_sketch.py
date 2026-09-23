@@ -95,7 +95,7 @@ def _debug_ckpt(r: str) -> Path:
 
 
 # ---------------------------------------------------------------- 1. lock
-def lock(out: Out) -> dict:
+def lock(out: Out, relock: bool = False) -> dict:
     runs = {}
     for r in RUNS:
         if out.debug:
@@ -129,8 +129,13 @@ def lock(out: Out) -> dict:
           "note": "All Task 3 checkpoints, settings and source-side diagnostics fixed before Sketch was loaded."}
     path = out.res / "lock.json"
     if path.exists() and not out.debug:
-        if load_json(path)["runs"] != lk["runs"]:
-            raise RuntimeError("lock.json exists with different checkpoints — investigate, do not overwrite")
+        old = load_json(path)
+        if old["runs"] != lk["runs"]:
+            if not relock:
+                raise RuntimeError("lock.json exists with different checkpoints — rerun with --relock "
+                                   "(the previous lock is archived) if the runs were legitimately retrained")
+            save_json(old, out.res / f"lock_previous_{old['git_commit'][:10]}.json")
+            save_json(lk, path)
     else:
         save_json(lk, path)
     print(f"[lock] {len(runs)} runs locked at {lk['git_commit'][:10]}")
@@ -385,13 +390,15 @@ def main():
     ap.add_argument("--stage", choices=["all", "analyze", "figures"], default="all")
     ap.add_argument("--confirm-final", action="store_true",
                     help="required for the extract stage: confirms all Task 3 decisions are fixed")
+    ap.add_argument("--relock", action="store_true",
+                    help="checkpoints changed since the previous lock (archives it and writes a new one)")
     ap.add_argument("--debug-limit", type=int, default=None, help="sandbox testing only")
     a = ap.parse_args()
     out = Out(a.debug_limit is not None)
     if a.stage == "all":
         if not a.confirm_final:
             raise SystemExit("Refusing to load Sketch without --confirm-final.")
-        runs = lock(out)
+        runs = lock(out, a.relock)
         extract(out, runs, a.debug_limit)
     R = analyze(out) if a.stage in ("all", "analyze") else load_json(out.res / "metrics.json")
     figures(out, R)
