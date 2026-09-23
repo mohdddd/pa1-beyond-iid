@@ -1,0 +1,21 @@
+# Task 4 Vanilla closed-set baseline (manual §4 "Dataset, Models, and Experimental Setup").
+run_name: vanilla
+method: vanilla
+seed: 6304
+data:
+  splits: task4/data/splits/cifar10_seed6304.json   # stratified 90/10 of official train
+  batch_size: 128
+  num_workers: 2
+  randaugment: null          # GCSC sets {num_ops: 2, magnitude: 9}
+model:
+  num_classes: 10
+optim:
+  lr: 0.1
+  momentum: 0.9
+  weight_decay: 5.0e-4       # applied to all parameters
+  schedule: cosine           # CosineAnnealingLR, T_max = epochs, stepped per epoch, eta_min 0
+train:
+  epochs: 100
+  amp: true                  # fp16 autocast + GradScaler (speed on T4)
+  channels_last: true
+  eval_batch: 1000

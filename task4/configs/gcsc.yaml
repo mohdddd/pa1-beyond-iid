@@ -1,0 +1,6 @@
+# GCSC = Vanilla recipe with exactly one change: RandAugment after crop/flip, before ToTensor/Normalize.
+inherit: vanilla.yaml
+run_name: gcsc
+method: gcsc
+data:
+  randaugment: {num_ops: 2, magnitude: 9}

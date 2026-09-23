@@ -71,3 +71,13 @@ def run_metadata(config: dict | None = None, **extra) -> dict:
 
 def save_run_metadata(path, config: dict | None = None, **extra) -> None:
     save_json(run_metadata(config, **extra), path)
+
+
+def sha256_file(path) -> str:
+    """SHA-256 of a file (used to lock checkpoints before final evaluation)."""
+    import hashlib
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        while b := f.read(1 << 22):
+            h.update(b)
+    return h.hexdigest()
