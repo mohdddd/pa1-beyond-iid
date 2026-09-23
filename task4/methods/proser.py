@@ -14,7 +14,10 @@ placeholders.
 Differences of the reference code (not used): known-class CE over all 15 logits, mixup term weighted 0.01 and
 targeted at the first dummy only, one lambda per batch, no different-class constraint, WideResNet, 10 epochs.
 """
+from contextlib import contextmanager
+
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 
 from common.io import sha256_file
@@ -23,6 +26,20 @@ from task4.methods.manifold_mixup import manifold_mixup
 from task4.methods.vanilla import Vanilla
 
 MASK = -1e9
+
+
+@contextmanager
+def no_running_stat_update(*modules):
+    """BN layers normalise with batch statistics but leave running mean/var unchanged (momentum 0)."""
+    bns = [m for mod in modules for m in mod.modules() if isinstance(m, nn.modules.batchnorm._BatchNorm)]
+    saved = [m.momentum for m in bns]
+    for m in bns:
+        m.momentum = 0.0
+    try:
+        yield
+    finally:
+        for m, mo in zip(bns, saved):
+            m.momentum = mo
 
 
 def placeholder_logits(model, f):
@@ -43,6 +60,10 @@ class PROSER(Vanilla):
                      "init_epoch": st["epoch"], "init_val_acc": st["val_acc"]}
         self.beta, self.gamma, self.alpha = p["beta"], p["gamma"], p["mixup_alpha"]
         self.K = self.cfg["model"]["num_classes"]
+        # "update" (default, as in the reference code): mixed features also update BN running stats of layer3/4.
+        # "frozen": the mixed pass uses batch statistics but does not change the running statistics.
+        self.mixed_bn = p.get("mixed_bn_stats", "update")
+        assert self.mixed_bn in ("update", "frozen")
         return model
 
     def loss(self, model, x, y):
@@ -57,7 +78,11 @@ class PROSER(Vanilla):
         l_cp = F.cross_entropy(masked, K)
         # data placeholders (second half): manifold mixup after layer2
         h_mix, _, _ = manifold_mixup(model.pre(xb), yb, self.alpha)
-        zmix = placeholder_logits(model, model.post(h_mix))
+        if self.mixed_bn == "frozen":
+            with no_running_stat_update(model.layer3, model.layer4):
+                zmix = placeholder_logits(model, model.post(h_mix))
+        else:
+            zmix = placeholder_logits(model, model.post(h_mix))
         l_dp = F.cross_entropy(zmix, torch.full_like(yb, self.K))
         loss = l_known + self.beta * l_cp + self.gamma * l_dp
         with torch.no_grad():

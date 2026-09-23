@@ -1,0 +1,7 @@
+# PROSER variant: identical to proser.yaml except that the manifold-mixup (proxy-unknown) pass does not update the
+# BatchNorm running statistics of layer3/layer4 (it still normalises with its own batch statistics).
+# Motivation: CIFAR-10-only diagnostic (task4/evaluation/bn_diagnostic.py); no unknown data involved.
+inherit: proser.yaml
+run_name: proser_cleanbn
+proser:
+  mixed_bn_stats: frozen
