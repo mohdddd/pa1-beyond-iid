@@ -1,7 +1,7 @@
 {
   "run": "proser",
   "best_epoch": 1,
-  "best_val_acc": 0.9538,
-  "best_pt_sha256": "539a02685e7b881a7c3b9cf9c702f15464957760f294a2a71cfeb2d55bb227ef",
+  "best_val_acc": 0.9494,
+  "best_pt_sha256": "81be59a17abb7b6c43256314feba78c610cff235c9cccf4fd5de42d9d5545592",
   "epochs": 50
 }

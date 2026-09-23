@@ -1,7 +1,7 @@
 {
   "run": "vanilla",
-  "best_epoch": 98,
-  "best_val_acc": 0.957,
-  "best_pt_sha256": "51b72b2568454b439096fedc7d54a030ac39de8fa3d427a8157dd2e9a5d5f197",
+  "best_epoch": 95,
+  "best_val_acc": 0.9556,
+  "best_pt_sha256": "2d2db26c38bc10ccfd8825e3d9ad7aa466f0375438942d77fc3643f7d9a423b8",
   "epochs": 100
 }

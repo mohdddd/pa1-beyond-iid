@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-09-23T16:48:02",
-  "git_commit": "b359e59c735882a52d62912b4916a62fd5e43276",
+  "timestamp": "2026-09-23T20:12:20",
+  "git_commit": "2e051bc52709e7230c9b1d90c09ea5cf4e1f2b6e-dirty",
   "python": "3.12.13",
   "torch": "2.10.0+cu128",
   "cuda": "12.8",
@@ -43,7 +43,7 @@
   "amp": true,
   "smoke": false,
   "init_checkpoint": "/kaggle/working/PA1_storage/checkpoints/task4/vanilla/best.pt",
-  "init_sha256": "51b72b2568454b439096fedc7d54a030ac39de8fa3d427a8157dd2e9a5d5f197",
-  "init_epoch": 98,
-  "init_val_acc": 0.957
+  "init_sha256": "2d2db26c38bc10ccfd8825e3d9ad7aa466f0375438942d77fc3643f7d9a423b8",
+  "init_epoch": 95,
+  "init_val_acc": 0.9556
 }
