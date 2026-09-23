@@ -6,24 +6,24 @@ source_only,guitar,0.9178,"person (46, 0.08)","elephant (2, 0.00)"
 source_only,horse,0.6924,"person (133, 0.16)","elephant (73, 0.09)"
 source_only,house,0.675,"person (21, 0.26)","elephant (3, 0.04)"
 source_only,person,0.9562,"elephant (7, 0.04)",
-dan,dog,0.6425,"person (158, 0.20)","house (78, 0.10)"
-dan,elephant,0.5878,"person (123, 0.17)","dog (92, 0.12)"
-dan,giraffe,0.5339,"person (176, 0.23)","house (75, 0.10)"
-dan,guitar,0.5872,"person (171, 0.28)","house (66, 0.11)"
-dan,horse,0.6152,"dog (96, 0.12)","house (95, 0.12)"
+dan,dog,0.421,"person (290, 0.38)","house (62, 0.08)"
+dan,elephant,0.5257,"person (238, 0.32)","house (64, 0.09)"
+dan,giraffe,0.5963,"horse (94, 0.12)","house (73, 0.10)"
+dan,guitar,0.8536,"house (57, 0.09)","person (30, 0.05)"
+dan,horse,0.7255,"house (112, 0.14)","person (54, 0.07)"
 dan,house,1.0,,
-dan,person,0.3875,"house (98, 0.61)",
-dann,dog,0.0415,"person (484, 0.63)","giraffe (217, 0.28)"
-dann,elephant,0.0041,"person (508, 0.69)","giraffe (142, 0.19)"
-dann,giraffe,0.2683,"person (492, 0.65)","dog (41, 0.05)"
-dann,guitar,0.0,"person (353, 0.58)","dog (180, 0.30)"
-dann,horse,0.0931,"person (529, 0.65)","giraffe (179, 0.22)"
-dann,house,0.0,"person (49, 0.61)","giraffe (28, 0.35)"
-dann,person,0.5562,"giraffe (69, 0.43)","dog (2, 0.01)"
-cdan,dog,0.1477,"elephant (254, 0.33)","horse (236, 0.31)"
-cdan,elephant,0.9608,"person (19, 0.03)","giraffe (3, 0.00)"
-cdan,giraffe,0.672,"horse (151, 0.20)","person (45, 0.06)"
-cdan,guitar,0.9161,"elephant (30, 0.05)","person (10, 0.02)"
-cdan,horse,0.81,"elephant (100, 0.12)","giraffe (24, 0.03)"
+dan,person,0.475,"house (84, 0.53)",
+dann,dog,0.0013,"house (771, 1.00)",
+dann,elephant,0.0,"house (740, 1.00)",
+dann,giraffe,0.0784,"house (694, 0.92)",
+dann,guitar,0.0181,"house (594, 0.98)","giraffe (3, 0.00)"
+dann,horse,0.0012,"house (815, 1.00)",
+dann,house,1.0,,
+dann,person,0.0,"house (160, 1.00)",
+cdan,dog,0.6425,"horse (272, 0.35)","house (3, 0.00)"
+cdan,elephant,0.0014,"horse (397, 0.54)","dog (337, 0.46)"
+cdan,giraffe,0.1979,"horse (438, 0.58)","dog (148, 0.20)"
+cdan,guitar,0.9753,"dog (7, 0.01)","horse (3, 0.00)"
+cdan,horse,0.9498,"dog (38, 0.05)","guitar (1, 0.00)"
 cdan,house,1.0,,
-cdan,person,0.9562,"elephant (5, 0.03)","horse (1, 0.01)"
+cdan,person,0.5312,"dog (49, 0.31)","horse (25, 0.16)"

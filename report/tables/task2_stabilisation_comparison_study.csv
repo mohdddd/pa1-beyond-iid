@@ -1,0 +1,4 @@
+lambda_mmd,val_mean_macro_f1_before,target_accuracy_before,domain_separability_before,val_mean_macro_f1_after,target_accuracy_after,domain_separability_after
+0.1,0.954,0.7238,0.919,0.9453,0.6839,0.9794
+1.0,0.9474,0.594,0.8668,0.9405,0.6185,0.9451
+10.0,0.0507,0.0407,0.8407,0.8707,0.6951,0.8283

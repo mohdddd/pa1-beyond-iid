@@ -1,0 +1,5 @@
+method,val_mean_f1_before,val_mean_f1_after,val_worst_f1_before,val_worst_f1_after,target_acc_before,target_acc_after,target_f1_before,target_f1_after,domain_separability_before,domain_separability_after,feat_norm_source_before,feat_norm_source_after,feat_norm_target_before,feat_norm_target_after
+source_only,0.9369,0.9369,0.9178,0.9178,0.5887,0.5887,0.6045,0.6045,0.9986,0.9986,59.2804,59.2804,38.6238,38.6238
+dan,0.9474,0.9405,0.9159,0.9059,0.594,0.6185,0.5563,0.5749,0.8668,0.9451,12.6887,69.6117,12.8704,48.9942
+dann,0.1281,0.937,0.0904,0.9182,0.1023,0.0387,0.0756,0.0323,1.0,1.0,12712.4629,67.9272,64565.9023,68.402
+cdan,0.8938,0.9397,0.8474,0.887,0.7081,0.5546,0.6951,0.5724,0.9959,0.9918,57.6256,89.9562,45.6535,65.2706
