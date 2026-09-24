@@ -77,5 +77,3 @@ All splits, subsets, and training runs use seed 6304 (`common/seed.py`).
 | zhoudw-zdw/CVPR21-Proser (github.com/zhoudw-zdw/CVPR21-Proser) | none stated | consulted only (no code copied): PROSER training structure and detection score | `task4/methods/proser.py`, `task4/scores/proser_placeholder.py` |
 | torchvision / OpenCLIP pretrained weights | BSD / MIT | backbones (Tasks 1–3), RandAugment, ResNet-18 definition | task code |
 | HF datasets `flwrlabs/pacs`, `uoft-cs/cifar10`, `uoft-cs/cifar100` (pinned revisions, SHA-256) | dataset licences | PACS, CIFAR-10, CIFAR-100 | `shared/pacs.py`, `task4/data/` |
-
-Coding assistance from an LLM was used for the code; all code was reviewed and run by the author.
